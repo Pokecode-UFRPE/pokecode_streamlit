@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objects as go
 
 with open('assets\css\style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
@@ -23,22 +24,23 @@ if option == 'Quantidade de espécies por tipo':
     st.text("Apresenta um gráfico contando a quantidade de pokémon por cada tipo existente")
     st.text("Ele inclui os pokemon que possuem dois tipos, e os subdivide")
     st.markdown("<br>", unsafe_allow_html=True)
-    st.line_chart(type_information)
+    graph_type = go.Figure(data=go.Scatter(x=type_information.index, y=type_information.values, mode='lines'))
+    st.plotly_chart(graph_type)
 elif option == 'Quantidade de espécies por formato':
     st.text("Apresenta um gráfico que contabiliza a quantidade de pokemon definidos pelo formato")
     st.markdown("<br>", unsafe_allow_html=True)
-    st.line_chart(format_information)
+    graph_format = go.Figure(data=go.Scatter(x=format_information.index,y=format_information.values,mode='lines'))
+    st.plotly_chart(graph_format)
 elif option == 'Quantidade de espécies por geração':
-    st.text("Gráfico que explicita nitidamente a quantidade de pokemon lançadas por geração")
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.bar_chart(gen_information.sort_index())
+    st.text("Apresenta um gráfico que contabiliza a quantidade de pokemon por geração")
+    st.markdown("<br>",unsafe_allow_html=True)
+    gen_information = gen_information.sort_index()
+    graph_gen = go.Figure(data=go.Scatter(x=gen_information.index,y=gen_information.values,mode='lines'))
+    st.plotly_chart(graph_gen)
 elif option == 'Gráfico de dispersão':
     st.text("Gráfico de dispersão que relaciona altura e peso dos pokemon")
     st.text("Utilizando a biblioteca matplotlib")
     st.markdown("<br>", unsafe_allow_html=True)
-    fig, ax = plt.subplots()
-    ax.scatter(pokemon_df['height'], pokemon_df['weight'])
-    ax.set_xlabel('Altura')
-    ax.set_ylabel('Peso')
-    ax.set_title('Relação entre Altura e Peso dos Pokémon')
-    st.pyplot(fig)
+    grath_dispersal = px.scatter(pokemon_df, x='height', y='weight', title='Relação entre Altura e Peso dos Pokémon',
+                 labels={'height': 'Altura', 'weight': 'Peso'})
+    st.plotly_chart(grath_dispersal)
