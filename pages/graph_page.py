@@ -39,7 +39,7 @@ elif option == 'Quantidade de espécies por geração':
     st.plotly_chart(graph_gen)
 elif option == 'Gráfico de dispersão':
     st.text("Gráfico de dispersão que relaciona altura e peso dos pokemon")
-    st.text("Utilizando a biblioteca matplotlib")
+    st.text("Utilizando a biblioteca plotly")
     st.markdown("<br>", unsafe_allow_html=True)
     grath_dispersal = px.scatter(pokemon_df, x='height', y='weight', title='Relação entre Altura e Peso dos Pokémon',
                  labels={'height': 'Altura', 'weight': 'Peso'})
