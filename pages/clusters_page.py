@@ -3,9 +3,9 @@ import pandas as pd
 from sklearn.cluster import KMeans
 import plotly.express as px
 import plotly.graph_objects as go
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
-
-pokemon_df = pd.read_csv("data/pokemon.csv")
+pokemon_df = pd.read_parquet("data/pokemon.parquet")
 
 st.subheader("Testes de clusters")
 # CODIGO QUE RETIRA OS DUPICADAS DE NÚMERO DA POKEDEX

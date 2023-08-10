@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 
 with open('assets\css\style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-pokemon_df = pd.read_csv("data\pokemon.csv")
+pokemon_df = pd.read_parquet("data\pokemon.parquet")
 # CODIGO QUE RETIRA OS DUPICADAS DE NÚMERO DA POKEDEX
 pokemon_df = pokemon_df.drop_duplicates(subset='pokedex_number')
 
