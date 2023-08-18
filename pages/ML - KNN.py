@@ -7,23 +7,36 @@ pokemon_df = pd.read_parquet('data/pokemon.parquet')
 pokemon_df['image'] = ''
 pokemon_df['image'] = pokemon_df['pokedex_number'].apply(lambda x: f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{x}.png')
 
-
 selected_columns = ['typing', 'hp', 'speed', 'height', 'weight', 'shape', 'primary_color']
 pokemon_features = pokemon_df[selected_columns].copy()
 
-# st.write(pokemon_df)
+# GERANDO DUAS COLUNAS A PARTIR DA QUEBRA DA COLUNA DE TIPO
+pokemon_features[['tipe1', 'tipe2']] = pokemon_features['typing'].str.split('~', n=1, expand=True)
+pokemon_features.drop(columns=['typing'], inplace=True)
 
+# PASSANDO O ONEHOT PARA GERAR AS COLUNAS BOOL DOS DADOS TEXTUAIS
 encoder = OneHotEncoder(sparse=False, handle_unknown='ignore')
-encoded_columns = pd.DataFrame(encoder.fit_transform(pokemon_features[['typing', 'shape', 'primary_color']]))
-encoded_columns.columns = encoder.get_feature_names_out(['typing', 'shape', 'primary_color'])
+encoded_columns_tipos = pd.DataFrame(encoder.fit_transform(pokemon_features[['tipe1', 'tipe2']]))
+encoded_columns_tipos.columns = encoder.get_feature_names_out(['tipe1', 'tipe2'])
+encoded_columns = pd.DataFrame(encoder.fit_transform(pokemon_features[['shape', 'primary_color']]))
+encoded_columns.columns = encoder.get_feature_names_out(['shape', 'primary_color'])
 
-pokemon_features = pd.concat([pokemon_features, encoded_columns], axis=1)
-pokemon_features.drop(columns=['typing', 'shape', 'primary_color'], inplace=True)
+# REMOVO A DIVISAO DE TIPOS PRIMARIOS E SECUNDARIOS CRIANDO UMA COLUNA GENERICA PARA CADA TIPO BOOL
+colunas_tipos_genericas = set([col.split('_')[1] for col in encoded_columns_tipos.columns if 'tipe' in col])
+tipos_bool = pd.DataFrame()
+for tipo in colunas_tipos_genericas:
+    tipo_cols = [col for col in encoded_columns_tipos.columns if f'tipe1_{tipo}' in col or f'tipe2_{tipo}' in col]
+    tipos_bool[tipo] = encoded_columns_tipos[tipo_cols].any(axis=1).astype(int)
+
+# DESCARTO OS DADOS QUE USEI PARA GERAR O ONEHOT E OS TIPOS GENERICOS
+pokemon_features.drop(columns=['tipe1', 'tipe2', 'shape', 'primary_color'], inplace=True)
+
+# CONCATENO OS TIPOS GENERICOS A FORMA E A COR
+pokemon_features = pd.concat([pokemon_features, encoded_columns, tipos_bool], axis=1)
+st.write(pokemon_features)
 
 scaler = StandardScaler()
 pokemon_features[['hp', 'speed', 'height', 'weight']] = scaler.fit_transform(pokemon_features[['hp', 'speed', 'height', 'weight']])
-# st.write(pokemon_features)
-
 
 k_neighbors = 4
 knn_model = NearestNeighbors(n_neighbors=k_neighbors, metric='euclidean')
