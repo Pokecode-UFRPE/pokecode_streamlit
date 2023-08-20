@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.neighbors import NearestNeighbors
 
-pokemon_df = pd.read_csv("pokemonParaClusters.csv")
+pokemon_df = pd.read_csv("data/pokemon.csv")
 pokemon_df['image'] = pokemon_df['pokedex_number'].apply(lambda x: f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{x}.png')
 st.subheader("Testes de clusters")
 
