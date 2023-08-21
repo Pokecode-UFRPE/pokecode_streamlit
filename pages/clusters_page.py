@@ -4,7 +4,7 @@ import streamlit as st
 import pandas as pd
 from sklearn.cluster import KMeans
 import plotly.express as px
-
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 current_path = Path(__file__).resolve().parent.parent
 file_path = current_path / "data" / "pokemon.csv"
