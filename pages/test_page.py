@@ -1,9 +1,15 @@
+from pathlib import Path
+
 import streamlit as st
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
-pokemon_df = pd.read_parquet('data/pokemon.parquet')
+
+current_path = Path(__file__).resolve().parent.parent
+file_path = current_path / "data" / "pokemon.parquet"
+
+pokemon_df = pd.read_parquet(file_path)
 pokemon_df['image'] = ''
 pokemon_df['image'] = pokemon_df['pokedex_number'].apply(lambda x: f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{x}.png')
 

@@ -4,15 +4,15 @@ import random
 
 st.set_page_config(
     page_title="PokeCode",
-    page_icon="assets\icons\logo1.png",
+    page_icon="assets/icons/logo1.png",
     initial_sidebar_state="collapsed"
 )
 
 # estilizando com o arquivo css
-with open('assets\css\style.css') as f:
+with open('assets/css/style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-pokemon_df = pd.read_csv("data\pokemon.csv")
+pokemon_df = pd.read_csv("data/pokemon.csv")
 # CODIGO QUE RETIRA OS DUPICADAS DE NÚMERO DA POKEDEX
 pokemon_df = pokemon_df.drop_duplicates(subset='pokedex_number')
 # adicionando os links das imagens em uma nova coluna no banco
@@ -65,7 +65,7 @@ def search_is_mythical():
 
 
 # MAIN PAGE START --
-st.image("assets\icons\logo2.png")
+st.image("assets/icons/logo2.png")
 st.markdown('<h1 class="site-title">Banco de dados</h1>', unsafe_allow_html=True)
 st.markdown('<h2 class="site-subt">Escolha o filtro de busca:</h2>', unsafe_allow_html=True)
 

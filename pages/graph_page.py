@@ -1,11 +1,18 @@
+from pathlib import Path
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-with open('assets\css\style.css') as f:
+current_path = Path(__file__).resolve().parent.parent
+css_path = current_path / "assets" / "css" / "style.css"
+with open(css_path) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-pokemon_df = pd.read_csv("data\pokemon.csv")
+
+file_path = current_path / "data" / "pokemon.csv"
+
+pokemon_df = pd.read_csv(file_path)
 # CODIGO QUE RETIRA OS DUPICADAS DE NÚMERO DA POKEDEX
 pokemon_df = pokemon_df.drop_duplicates(subset='pokedex_number')
 
