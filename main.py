@@ -4,7 +4,7 @@ import random
 
 st.set_page_config(
     page_title="PokeCode",
-    page_icon="assets/icons/logo1.png",
+    page_icon="assets\icons\logo1.png",
     initial_sidebar_state="collapsed"
 )
 
@@ -65,7 +65,7 @@ def search_is_mythical():
 
 
 # MAIN PAGE START --
-st.image("assets/icons/logo2.png")
+st.image("assets\icons\logo2.png")
 st.markdown('<h1 class="site-title">Banco de dados</h1>', unsafe_allow_html=True)
 st.markdown('<h2 class="site-subt">Escolha o filtro de busca:</h2>', unsafe_allow_html=True)
 
