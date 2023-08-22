@@ -10,9 +10,11 @@ pokemon_df['image'] = pokemon_df['pokedex_number'].apply(lambda x: f'https://raw
 
 pokemon_features = tratamento_dados.tratar_df()
 pokemon_features_clusters, _, _ = tratamento_dados.clusterizar_df()
+
 k_neighbors = 4
 knn_model = NearestNeighbors(n_neighbors=k_neighbors, metric='euclidean')
 knn_model.fit(pokemon_features)
+
 knn_modelC = NearestNeighbors(n_neighbors=k_neighbors, metric='euclidean')
 knn_modelC.fit(pokemon_features_clusters)
 

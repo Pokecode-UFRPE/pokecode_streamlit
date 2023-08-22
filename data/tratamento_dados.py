@@ -36,7 +36,6 @@ def tratar_df():
     pokemon_features[['hp', 'speed', 'height', 'weight', 'attack', 'defense', 'base_happiness']] = scaler.fit_transform(pokemon_features[['hp', 'speed', 'height', 
                                                                                                                                           'weight', 'attack', 'defense', 
                                                                                                                                           'base_happiness']])
-    
     return pokemon_features
 
 def clusterizar_df():
