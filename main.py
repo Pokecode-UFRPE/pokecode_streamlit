@@ -1,11 +1,7 @@
 import random
 from pathlib import Path
 
-import pandas as pd
 import plotly.graph_objects as go
-import streamlit as st
-
-from pages.test_page import RecomendacaoPokemon
 
 current_path = Path(__file__).resolve().parent
 file_path = str(current_path / "data" / "pokemon.csv")
@@ -18,17 +14,44 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# estilizando com o arquivo css
-with open(css_path) as f:
+import pandas as pd
+
+with open('assets/css/style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-pokemon_df = pd.read_csv(file_path)
-# CODIGO QUE RETIRA OS DUPICADAS DE NÚMERO DA POKEDEX
+pokemon_df = pd.read_parquet("data/pokemon.parquet")
 pokemon_df = pokemon_df.drop_duplicates(subset='pokedex_number')
-# adicionando os links das imagens em uma nova coluna no banco
 pokemon_df['image'] = ''
 pokemon_df['image'] = pokemon_df['pokedex_number'].apply(
     lambda x: f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{x}.png')
+
+
+def generate_data_editor(result):
+    return st.data_editor(
+        result,
+        column_config={
+            "image": st.column_config.ImageColumn(
+                "Image"
+            )
+        },
+        hide_index=True, width=1000
+    )
+
+
+names_to_filter = ['Muk', 'Amoonguss', 'Swalot', 'Granbull', 'Foongus', 'Grimer', 'Reuniclus']
+filtered_df = pokemon_df[pokemon_df['name'].isin(names_to_filter)]
+columns_to_keep = [
+    "name", "pokedex_number", "image", "typing",
+    "hp", "speed", "height", "weight",
+    "shape", "primary_color", "attack",
+    "defense", "base_happiness"
+]
+
+logo = str(current_path / "assets" / "icons" / "logo2.png")
+st.image(logo)
+filtered_and_cut_df = filtered_df[columns_to_keep]
+
+generate_data_editor(filtered_and_cut_df)
 
 
 def generate_data_editor(result):
@@ -82,12 +105,9 @@ def search_is_mythical():
 
 
 # MAIN PAGE START --
-logo = str(current_path / "assets" / "icons" / "logo2.png")
-st.image(logo)
 st.markdown('<h1 class="site-title">Banco de dados</h1>', unsafe_allow_html=True)
 
 st.markdown('<h2 class="site-subt">Recomendação de pokemon:</h2>', unsafe_allow_html=True)
-RecomendacaoPokemon().renderize()
 st.markdown('<h2 class="site-subt">Escolha o filtro de busca:</h2>', unsafe_allow_html=True)
 
 with st.expander("Buscar pelo tipo"):
