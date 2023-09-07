@@ -43,7 +43,7 @@ pokemon_features[['hp', 'speed', 'height', 'weight']] = scaler.fit_transform(
 silhouette_avg = silhouette_score(pokemon_features_clusters, pokemon_features_clusters['cluster_label'])
 silhouette_values = silhouette_samples(pokemon_features_clusters, pokemon_features_clusters['cluster_label'])
 pokemon_features['silhouette_score'] = silhouette_values
-st.write(f"Coeficiente de Silhueta Médio no KNN com cluster: {silhouette_avg}")
+#st.write(f"Coeficiente de Silhueta Médio no KNN com cluster: {silhouette_avg}")
 
 k_neighbors = 20
 knn_model = NearestNeighbors(n_neighbors=k_neighbors, metric='euclidean')
@@ -52,17 +52,21 @@ knn_model.fit(pokemon_features)
 knn_modelC = NearestNeighbors(n_neighbors=k_neighbors, metric='euclidean')
 knn_modelC.fit(pokemon_features_clusters)
 
-st.header("Teste de ML")
-st.subheader("Implementando aprendizado por semelhança")
+# MAIN PAGE START --
+st.image("assets\icons\logo2.png")
+st.markdown('<h1 class="site-title">Sistema de Recomendação</h1>', unsafe_allow_html=True)
+st.markdown('<h3 class="site-subt">Implementação de Machine Learning por semelhança:</h3>', unsafe_allow_html=True)
 
-with st.expander("Buscar recomendações por um Pokémon"):
+st.markdown('<p class="site-subt"><b>K-Nearest Neighbors Puro</b></p>', unsafe_allow_html=True)
+
+with st.expander("Recomendações de Pokémon"):
     pokemon_choose = st.selectbox('Escolha um Pokémon', pokemon_df['name'], help='Selecione um Pokémon que você gosta')
 
     if pokemon_choose:
         selected_pokemon_index = pokemon_df[pokemon_df['name'] == pokemon_choose].index[0]
         distances, indices = knn_model.kneighbors(pokemon_features.iloc[selected_pokemon_index].values.reshape(1, -1))
         st.write(distances)
-        st.subheader("Pokémon semelhantes de acordo com:")
+        st.subheader("Pokémon semelhantes:")
         if pokemon_choose:
             selected_pokemon_index = pokemon_df[pokemon_df['name'] == pokemon_choose].index[0]
             distances, indices = knn_model.kneighbors(
@@ -75,7 +79,8 @@ with st.expander("Buscar recomendações por um Pokémon"):
                     st.image(pokemon_df.loc[indices[0][i], 'image'], caption=pokemon_df.loc[indices[0][i], 'name'],
                              width=100)
 
-with st.expander("Buscar recomendações por um Pokémon com cluster"):
+st.markdown('<p class="site-subt"><b>K-Nearest Neighbors com Clusterização</b></p>', unsafe_allow_html=True)
+with st.expander("Recomendações de Pokémon"):
     pokemon_choose = st.selectbox('Selecione um Pokémon', pokemon_df['name'],
                                   help='Selecione um Pokémon que você gosta')
 
@@ -84,7 +89,7 @@ with st.expander("Buscar recomendações por um Pokémon com cluster"):
         distances, indices = knn_modelC.kneighbors(
             pokemon_features_clusters.iloc[selected_pokemon_index].values.reshape(1, -1))
         st.write(distances)
-        st.subheader("Pokémon semelhantes de acordo com:")
+        st.subheader("Pokémon semelhantes:")
         colunas = st.columns(10)
 
         for i in range(10):

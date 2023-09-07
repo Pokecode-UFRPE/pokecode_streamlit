@@ -2,19 +2,29 @@ import random
 from pathlib import Path
 
 import plotly.graph_objects as go
+import streamlit as st
+import pandas as pd
+from st_pages import Page, show_pages
 
 current_path = Path(__file__).resolve().parent
 file_path = str(current_path / "data" / "pokemon.csv")
 css_path = str(current_path / "assets" / "css" / "style.css")
-import streamlit as st
 
 st.set_page_config(
-    page_title="PokeCode",
+    page_title="POKECODE",
     page_icon="assets\icons\logo1.png",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed",
 )
 
-import pandas as pd
+show_pages (
+    [
+        Page("main.py", "POKECODE", "📌"),
+        Page("pages/AED - Painel de Gráficos.py", "Análise de Dados", "📈"),
+        Page("pages/AED - Painel de Tabelas.py", "Visualização do DataFrame", "📊"),
+        Page("pages/ML - KNN.py", "Sistema de Recomendação", "💬"),
+    ]
+    
+)
 
 with open('assets/css/style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
@@ -38,8 +48,8 @@ def generate_data_editor(result):
     )
 
 
-names_to_filter = ['Muk', 'Amoonguss', 'Swalot', 'Granbull', 'Foongus', 'Grimer', 'Reuniclus']
-filtered_df = pokemon_df[pokemon_df['name'].isin(names_to_filter)]
+
+filtered_df = pokemon_df
 columns_to_keep = [
     "name", "pokedex_number", "image", "typing",
     "hp", "speed", "height", "weight",
@@ -47,11 +57,7 @@ columns_to_keep = [
     "defense", "base_happiness"
 ]
 
-logo = str(current_path / "assets" / "icons" / "logo2.png")
-st.image(logo)
 filtered_and_cut_df = filtered_df[columns_to_keep]
-
-generate_data_editor(filtered_and_cut_df)
 
 
 def generate_data_editor(result):
@@ -70,175 +76,87 @@ def generate_data_editor(result):
     )
 
 
-def search_by_type(pokemon_type):
-    return pokemon_df.loc[
-        pokemon_df['typing'].str.contains(pokemon_type), ['pokedex_number', 'name', 'genus', 'typing', 'image']]
-
-
-def search_by_shape(pokemon_shape):
-    return pokemon_df.loc[
-        pokemon_df['shape'].str.contains(pokemon_shape), ['pokedex_number', 'name', 'genus', 'shape', 'image']]
-
-
-def search_by_gen(pokemon_gen):
-    return pokemon_df.loc[
-        pokemon_df['gen_introduced'] == pokemon_gen, ['pokedex_number', 'name', 'genus', 'gen_introduced', 'image']]
-
-
-def search_by_color(pokemon_color):
-    return pokemon_df.loc[
-        pokemon_df['primary_color'].str.contains(pokemon_color), ['pokedex_number', 'name', 'genus', 'primary_color',
-                                                                  'image']]
-
-
-def search_is_baby():
-    return pokemon_df.loc[
-        pokemon_df['baby_pokemon'] == True, ['pokedex_number', 'name', 'genus', 'baby_pokemon', 'image']]
-
-
-def search_is_legendary():
-    return pokemon_df.loc[pokemon_df['legendary'] == True, ['pokedex_number', 'name', 'genus', 'legendary', 'image']]
-
-
-def search_is_mythical():
-    return pokemon_df.loc[pokemon_df['mythical'] == True, ['pokedex_number', 'name', 'genus', 'mythical', 'image']]
+def dataset():
+    return filtered_and_cut_df
 
 
 # MAIN PAGE START --
-st.markdown('<h1 class="site-title">Banco de dados</h1>', unsafe_allow_html=True)
+st.image("assets\icons\logo2.png")
+st.markdown('<h2 class="site-subt">Conheça o PokeCode</h2>', unsafe_allow_html=True)
+st.markdown('<p class="site-subt">O <b>POKECODE</b> tem como objetivo desenvolver uma solução que simplifique a pesquisa, aprendizado e acesso a informações sobre os Pokémon de interesse do usuário, utilizando dados de um dataset como base, a fim de aprimorar a experiência de jogo.</p>', unsafe_allow_html=True)
 
-st.markdown('<h2 class="site-subt">Recomendação de pokemon:</h2>', unsafe_allow_html=True)
-st.markdown('<h2 class="site-subt">Escolha o filtro de busca:</h2>', unsafe_allow_html=True)
+st.markdown('<h3 class="site-subt">Conjunto de Dados</h3>', unsafe_allow_html=True)
+st.markdown('<p><b>Complete Pokemon Data Set</b><br>Por Kyle Kohnen</p>', unsafe_allow_html=True)
 
-with st.expander("Buscar pelo tipo"):
-    types = pokemon_df.loc[~pokemon_df['typing'].str.contains('~'), 'typing'].unique()
-    pokemon_type = st.selectbox(
-        'Pesquise pelo tipo do seu pokemon:',
-        (types))
-    if pokemon_type:
-        result = search_by_type(pokemon_type)
-        generate_data_editor(result)
+st.markdown('<p>O conjunto de dados utilizado na aplicação contém 1118 Pokémon diferentes e 49 colunas distintas contendo informações distintas sobre as criaturas do. A maioria dos dados foi extraída do PokeAPI. Outras fontes de dados incluem PokemonDB, Serebii, Bulbapedia e Pokemon Wiki.</p>', unsafe_allow_html=True)
 
-with st.expander("Buscar pelo formato"):
-    shapes = pokemon_df['shape'].unique()
-    pokemon_shape = st.selectbox(
-        'Pesquise pelo formato com que ele se parece:',
-        (shapes))
-    if pokemon_shape:
-        result1 = search_by_shape(pokemon_shape)
-        generate_data_editor(result1)
+with st.expander("Visualizar o DataSet:"):  
+    conjdados = dataset()
+    generate_data_editor(conjdados)
 
-with st.expander("Buscar pela geração"):
-    gens = pokemon_df['gen_introduced'].unique()
-    pokemon_gen = st.selectbox(
-        'Pesquise pela geração em que ele foi lançado:',
-        (gens))
-    if pokemon_gen:
-        result2 = search_by_gen(pokemon_gen)
-        generate_data_editor(result2)
+st.markdown('<p class="site-subt"><b>Usabilidade</b><br>10.00</p>', unsafe_allow_html=True)
+st.markdown('<p class="site-subt"><b>Tags</b><br>Games, Anime, Video Games, Anime and Manga, Popular Culture</p>', unsafe_allow_html=True)
 
-with st.expander("Buscar pela cor"):
-    colors = pokemon_df['primary_color'].unique()
-    pokemon_color = st.selectbox(
-        'Pesquise pela sua cor principal:',
-        (colors))
-    if pokemon_color:
-        result3 = search_by_color(pokemon_color)
-        generate_data_editor(result3)
+st.markdown('<h3 class="site-subt">Aplicações</h3>', unsafe_allow_html=True)
 
-with st.expander("Buscar os pokémon por raridade"):
-    rarity = st.radio(
-        "",
-        ["baby_pokemon", "legendary", "mythical"],
-        horizontal=True
-    )
-    if rarity == 'baby_pokemon':
-        result4 = search_is_baby()
-        generate_data_editor(result4)
+col1, col2, col3 = st.columns(3)
 
-    elif rarity == 'legendary':
-        result5 = search_is_legendary()
-        generate_data_editor(result5)
-
-    else:
-        result6 = search_is_mythical()
-        generate_data_editor(result6)
-
-with st.expander("Busca com mais de um parâmetro"):
-    options = st.multiselect(
-        'Selecione todas as opções que deseja utilizar na busca',
-        ['tipo', 'formato', 'geração', 'cor'])
-
-    if 'tipo' in options:
-        pokemon_type_radio = st.radio(
-            'Informe o tipo',
-            (types),
-            key='tipo',
-            help='Selecione o tipo desejado',
-            horizontal=True
-        )
-    if 'formato' in options:
-        pokemon_shape_radio = st.radio(
-            'Informe o formato',
-            (shapes),
-            key='formato',
-            help='Selecione o formato desejado',
-            horizontal=True
-        )
-    if 'geração' in options:
-        pokemon_generation_radio = st.radio(
-            'Informe a geração',
-            (gens),
-            key='geração',
-            help='Selecione a geração desejada',
-            horizontal=True
-        )
-    if 'cor' in options:
-        pokemon_color_radio = st.radio(
-            'Informe a cor',
-            (colors),
-            key='cor',
-            help='Selecione a cor desejada',
-            horizontal=True
-        )
-    if st.button('Buscar'):
-        union_list = [None] * 4
-        if 'tipo' in options and pokemon_type_radio:
-            union_list[0] = (search_by_type(pokemon_type_radio))
-        else:
-            union_list[0] = None
-        if 'formato' in options and pokemon_shape_radio:
-            union_list[1] = (search_by_shape(pokemon_shape_radio))
-        else:
-            union_list[1] = None
-        if 'geração' in options and pokemon_generation_radio:
-            union_list[2] = (search_by_gen(pokemon_generation_radio))
-        else:
-            union_list[2] = None
-        if 'cor' in options and pokemon_color_radio:
-            union_list[3] = (search_by_color(pokemon_color_radio))
-        else:
-            union_list[3] = None
-
-        radios_selcted = []
-        # Verificando cada elemento da lista union_list
-        for element in union_list:
-            if element is not None:
-                radios_selcted.append(element)
-
-        if len(radios_selcted) > 0:
-            count = 0
-            result_df = union_list[0]
-            for i in range(1, len(union_list)):
-                if union_list[i] is not None:
-                    count += 1
-                    result_df = result_df.merge(union_list[i], on="pokedex_number", how="inner")
-                    if count >= 1:
-                        result_df = result_df.rename(columns={'image_x': 'image', 'genus_x': 'genus', 'name_x': 'name'})
-                        result_df = result_df.filter(regex='^(?!.*(_y)$)')
-            generate_data_editor(result_df)
-
-col_count = len(pokemon_df.columns)
-fig = go.Figure(data=[go.Bar(y=pokemon_df.columns, x=[col_count] * col_count, orientation='h')])
-fig.update_layout(title="Colunas do DataFrame", xaxis_title="Número de Colunas", yaxis_title="Colunas")
-st.plotly_chart(fig)
+with col1:
+    button1 = st.markdown("""
+        <style>
+        .custom-button {
+            background-color: #5171FD;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .custom-button:hover {
+            opacity: 0.8;
+        }
+        </style><button class="custom-button">Painel de Gráficos</button>
+        """, unsafe_allow_html=True)
+    
+with col2:
+    button2 = st.markdown("""
+        <style>
+        .custom-button {
+            background-color: #5171FD;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .custom-button:hover {
+            opacity: 0.8;
+        }
+        </style><button class="custom-button">Painel de Tabela</button>
+        """, unsafe_allow_html=True)
+    
+with col3: 
+    button3 = st.markdown("""
+        <style>
+        .custom-button {
+            background-color: #5171FD;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .custom-button:hover {
+            opacity: 0.8;
+        }
+        </style><button class="custom-button">Recomendações</button>
+        """, unsafe_allow_html=True)
+    
+    
+st.markdown('<p class="site-subt"><br><b>Equipe PokeCode</b><br> Alberson Alison de Araújo, André Filipe de Oliveira Figueiredo, Enzo Ferro Kretli, Gabriel Café Nunes de Souza, Isis Maria Oliveira Nilo de Souza, Pedro Henrique Correia da Silva.</p>', unsafe_allow_html=True)

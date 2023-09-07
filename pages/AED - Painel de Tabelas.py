@@ -1,5 +1,4 @@
 import random
-
 import pandas as pd
 import streamlit as st
 
@@ -65,12 +64,13 @@ def search_is_mythical():
     return pokemon_df.loc[pokemon_df['mythical'] == True, ['pokedex_number', 'name', 'genus', 'mythical', 'image']]
 
 
+
 # MAIN PAGE START --
-st.image("assets/icons/logo2.png")
-st.markdown('<h1 class="site-title">Visualização do DF com filtros</h1>', unsafe_allow_html=True)
+st.image("assets\icons\logo2.png")
+st.markdown('<h1 class="site-title">Visualização do DataFrame</h1>', unsafe_allow_html=True)
 st.markdown('<h3 class="site-subt">Selecione o filtro de busca:</h3>', unsafe_allow_html=True)
 
-with st.expander("Buscar pelo tipo"):
+with st.expander("Busca por tipo"):
     types = pokemon_df.loc[~pokemon_df['typing'].str.contains('~'), 'typing'].unique()
     pokemon_type = st.selectbox(
         'Pesquise pelo tipo do seu pokemon:',
@@ -79,7 +79,7 @@ with st.expander("Buscar pelo tipo"):
         result = search_by_type(pokemon_type)
         generate_data_editor(result)
 
-with st.expander("Buscar pelo formato"):
+with st.expander("Busca por formato"):
     shapes = pokemon_df['shape'].unique()
     pokemon_shape = st.selectbox(
         'Pesquise pelo formato com que ele se parece:',
@@ -88,7 +88,7 @@ with st.expander("Buscar pelo formato"):
         result1 = search_by_shape(pokemon_shape)
         generate_data_editor(result1)
 
-with st.expander("Buscar pela geração"):
+with st.expander("Busca por geração"):
     gens = pokemon_df['gen_introduced'].unique()
     pokemon_gen = st.selectbox(
         'Pesquise pela geração em que ele foi lançado:',
@@ -97,7 +97,7 @@ with st.expander("Buscar pela geração"):
         result2 = search_by_gen(pokemon_gen)
         generate_data_editor(result2)
 
-with st.expander("Buscar pela cor"):
+with st.expander("Busca por cor"):
     colors = pokemon_df['primary_color'].unique()
     pokemon_color = st.selectbox(
         'Pesquise pela sua cor principal:',
@@ -106,7 +106,7 @@ with st.expander("Buscar pela cor"):
         result3 = search_by_color(pokemon_color)
         generate_data_editor(result3)
 
-with st.expander("Buscar os pokémon por raridade"):
+with st.expander("Busca por raridade"):
     rarity = st.radio(
         "",
         ["baby_pokemon", "legendary", "mythical"],
@@ -126,7 +126,7 @@ with st.expander("Buscar os pokémon por raridade"):
 
 with st.expander("Busca com mais de um parâmetro"):
     options = st.multiselect(
-        'Selecione todas as opções que deseja utilizar na busca',
+        'Selecione todas as opções de filtro que deseja utilizar na busca',
         ['tipo', 'formato', 'geração', 'cor'])
 
     if 'tipo' in options:

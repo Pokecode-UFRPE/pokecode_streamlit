@@ -5,6 +5,8 @@ import streamlit as st
 
 from data import tratamento_dados
 
+with open('assets/css/style.css') as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 def obter_caracteristicas(row):
     caracteristicas = []
@@ -44,12 +46,13 @@ raridade_df['comum'] = ~(raridade_df['baby_pokemon'] | raridade_df['legendary'] 
 raridade_df['raridade'] = raridade_df.apply(obter_caracteristicas, axis=1)
 rarity_information = raridade_df['raridade'].value_counts()
 
-st.subheader("Analise de Dados")
+# MAIN
+st.image("assets\icons\logo2.png")
+st.markdown('<h1 class="site-title">Análise de Dados</h1>', unsafe_allow_html=True)
 option = st.selectbox(
-    'Selecione uma das opções para explanar os dados referentes a ela:',
-    ['Selecione um gráfico', 'Quantidade de espécies por tipo', 'Porcentagem de espécies pelo formato',
-     'Quantidade de espécies pela geração', 'Porcentagem de espécies que evoluem',
-     'Contagem de espécies pela cor principal',
+    'Selecione uma das opções para explorar os dados referentes a ela:',
+    ['Explorar', 'Quantidade de espécies por tipo', 'Porcentagem de espécies pelo formato', 
+     'Quantidade de espécies pela geração', 'Porcentagem de espécies que evoluem', 'Contagem de espécies pela cor principal', 
      'Porcentagem de espécies por raridade', 'Gráfico de dispersão', 'Clusterização'])
 
 # Exibe os dados correspondentes ao filtro selecionado
