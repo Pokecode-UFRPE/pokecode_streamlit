@@ -165,3 +165,4 @@ st.markdown('<p class="site-subt"><b>Equipe PokeCode</b><br> Alberson Alison de 
     
 st.markdown('<p class="site-subt"><b>Universidade Federal Rural de Pernambuco (UFRPE)</b><br><b>Departamento de Estatística e Informática</b><br>Projeto para as disciplinas de Projeto Interdisciplinar para Sistemas da Informação III e Desenvolvimento de Sistemas da Informação.</p>', unsafe_allow_html=True)    
 
+st.markdown('<hr>', unsafe_allow_html=True) 
