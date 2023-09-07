@@ -2,6 +2,12 @@ import random
 import pandas as pd
 import streamlit as st
 
+st.set_page_config(
+    page_title="POKECODE",
+    page_icon="assets\icons\logo1.png",
+    initial_sidebar_state="collapsed",
+)
+
 with open('assets/css/style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 

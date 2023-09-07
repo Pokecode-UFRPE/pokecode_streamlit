@@ -22,8 +22,7 @@ show_pages (
         Page("pages/AED - Painel de Gráficos.py", "Análise de Dados", "📈"),
         Page("pages/AED - Painel de Tabelas.py", "Visualização do DataFrame", "📊"),
         Page("pages/ML - KNN.py", "Sistema de Recomendação", "💬"),
-    ]
-    
+    ]  
 )
 
 with open('assets/css/style.css') as f:

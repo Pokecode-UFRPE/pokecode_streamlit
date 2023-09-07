@@ -8,6 +8,15 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 from data import tratamento_dados
 
+st.set_page_config(
+    page_title="POKECODE",
+    page_icon="assets\icons\logo1.png",
+    initial_sidebar_state="collapsed",
+)
+
+with open('assets/css/style.css') as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
 current_path = Path(__file__).resolve().parent.parent
 file_path = current_path / "data" / "pokemon.parquet"
 
