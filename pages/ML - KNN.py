@@ -111,3 +111,18 @@ st.markdown('<p class="site-subt"><b>DBSCAN</b></p>', unsafe_allow_html=True)
 
 with st.expander("Recomendações de Pokémon"):
     st.write("DBSCAN")
+    #Colocar aqui o Funcionamento do DBSCAN no mesmo estilo das outros algoritmos
+    
+st.markdown('<h3 class="site-subt"><b>Comparação de Algoritmos</b></h3>', unsafe_allow_html=True)
+# Escrever resumo com informações sobre as métricas utilizadas
+
+st.markdown('<p class="site-subt"><b>K-Nearest Neighbors Puro x K-Nearest Neighbors com Clusterização</b></p>', unsafe_allow_html=True)
+with st.expander("KNN Puro x KNN Cluster"):
+    st.write("")
+    # Colocar aqui a comparação
+    
+st.markdown('<p class="site-subt"><b>K-Nearest Neighbors com Clusterização x DBSCAN</b></p>', unsafe_allow_html=True)
+with st.expander("KNN Cluster x DBSCAN"):
+    st.write("")
+    # Colocar aqui a comparação
+    
