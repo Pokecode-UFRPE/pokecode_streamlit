@@ -33,7 +33,6 @@ pokemon_df['image'] = pokemon_df['pokedex_number'].apply(
 selected_columns = ['typing', 'hp', 'speed', 'height', 'weight', 'shape', 'primary_color']
 pokemon_features = pokemon_df[selected_columns].copy()
 
-# st.write(pokemon_df)
 
 encoder = OneHotEncoder(sparse=False, handle_unknown='ignore')
 encoded_columns = pd.DataFrame(encoder.fit_transform(pokemon_features[['typing', 'shape', 'primary_color']]))
@@ -45,7 +44,7 @@ pokemon_features.drop(columns=['typing', 'shape', 'primary_color'], inplace=True
 scaler = StandardScaler()
 pokemon_features[['hp', 'speed', 'height', 'weight']] = scaler.fit_transform(
     pokemon_features[['hp', 'speed', 'height', 'weight']])
-# st.write(pokemon_features)
+
 
 
 # Coeficiente de silhueta
@@ -64,7 +63,7 @@ knn_modelC.fit(pokemon_features_clusters)
 # MAIN PAGE START --
 st.image("assets\icons\logo2.png")
 st.markdown('<h1 class="site-title">Sistema de Recomendação</h1>', unsafe_allow_html=True)
-st.markdown('<h3 class="site-subt">Implementação de Machine Learning por semelhança:</h3>', unsafe_allow_html=True)
+st.markdown('<h3 class="site-subt">Implementação de Machine Learning', unsafe_allow_html=True)
 
 st.markdown('<p class="site-subt"><b>K-Nearest Neighbors Puro</b></p>', unsafe_allow_html=True)
 
@@ -106,3 +105,9 @@ with st.expander("Recomendações de Pokémon"):
                 st.header(f"{i + 1}º")
                 st.image(pokemon_df.loc[indices[0][i], 'image'], caption=pokemon_df.loc[indices[0][i], 'name'],
                          width=100)
+
+
+st.markdown('<p class="site-subt"><b>DBSCAN</b></p>', unsafe_allow_html=True)
+
+with st.expander("Recomendações de Pokémon"):
+    st.write("DBSCAN")

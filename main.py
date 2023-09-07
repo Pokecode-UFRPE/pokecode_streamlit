@@ -156,6 +156,12 @@ with col3:
         }
         </style><button class="custom-button">Recomendações</button>
         """, unsafe_allow_html=True)
+ 
+st.markdown('<br><hr>', unsafe_allow_html=True) 
+
+st.markdown('<h3 class="site-subt">Sobre o projeto</h3>', unsafe_allow_html=True)
+  
+st.markdown('<p class="site-subt"><b>Equipe PokeCode</b><br> Alberson Alison de Araújo, André Filipe de Oliveira Figueiredo, Enzo Ferro Kretli, Gabriel Café Nunes de Souza, Isis Maria Oliveira Nilo de Souza, Pedro Henrique Correia da Silva.</p>', unsafe_allow_html=True)
     
-    
-st.markdown('<p class="site-subt"><br><b>Equipe PokeCode</b><br> Alberson Alison de Araújo, André Filipe de Oliveira Figueiredo, Enzo Ferro Kretli, Gabriel Café Nunes de Souza, Isis Maria Oliveira Nilo de Souza, Pedro Henrique Correia da Silva.</p>', unsafe_allow_html=True)
+st.markdown('<p class="site-subt"><b>Universidade Federal Rural de Pernambuco (UFRPE)</b><br><b>Departamento de Estatística e Informática</b><br>Projeto para as disciplinas de Projeto Interdisciplinar para Sistemas da Informação III e Desenvolvimento de Sistemas da Informação.</p>', unsafe_allow_html=True)    
+
