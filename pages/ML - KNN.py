@@ -177,8 +177,8 @@ st.markdown('<p class="site-subt"><b>DBSCAN</b></p>', unsafe_allow_html=True)
 with st.expander("Recomendações de Pokémon"):
     pokemon_choose_dbscan = st.selectbox('Selete um Pokémon', pokemon_df['name'], help='Selecione um Pokémon que você gosta')
 
-    if pokemon_choose_dbscan:
-        selected_pokemon_index_dbscan = pokemon_df[pokemon_df['name'] == pokemon_choose_dbscan].index[0]
+    if pokemon_choose:
+        selected_pokemon_index_dbscan = pokemon_df[pokemon_df['name'] == pokemon_choose].index[0]
 
         # Encontrar o cluster do Pokémon de referência
         selected_pokemon_cluster = pokemon_clusters[selected_pokemon_index_dbscan]
@@ -188,6 +188,7 @@ with st.expander("Recomendações de Pokémon"):
                                    cluster == selected_pokemon_cluster and index != selected_pokemon_index_dbscan]
 
         st.subheader("Pokémon semelhantes:")
+
 
         colunas_dbscan = st.columns(10)
         for i in range(10):

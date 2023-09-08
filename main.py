@@ -21,7 +21,7 @@ show_pages (
         Page("main.py", "POKECODE", "📌"),
         Page("pages/AED - Painel de Gráficos.py", "Análise de Dados", "📈"),
         Page("pages/AED - Painel de Tabelas.py", "Visualização do DataFrame", "📊"),
-        Page("pages/ML - KNN.py", "Sistemas de Recomendação", "💬"),
+        Page("pages/ML - KNN.py", "Sistema de Recomendação", "💬"),
     ]  
 )
 
