@@ -47,39 +47,14 @@ option = st.selectbox(
     'Selecione uma das opções para explanar os dados referentes a ela:',
     ['Selecione um gráfico', 'Quantidade de espécies por tipo','Quantidade por tipos principais', 'Porcentagem de espécies pelo formato', 
      'Quantidade de espécies pela geração', 'Porcentagem de espécies que evoluem', 'Contagem de espécies pela cor principal', 
-     'Porcentagem de espécies por raridade', 'Gráfico de dispersão', 'Clusterização','Relação de Lendarios'])
+     'Porcentagem de espécies por raridade', 'Gráfico de dispersão','grafico de relação ataques efetivos e tipos', 'Clusterização'])
 
 # Exibe os dados correspondentes ao filtro selecionado
 if option == 'Quantidade de espécies por tipo':
     graph_type = go.Figure(data=go.Bar(y=type_information.index, x=type_information.values, orientation='h', marker=dict(color='#F55555')))
     st.plotly_chart(graph_type.update_layout(title='Gráfico dos Tipos', xaxis_title='Quantidade', yaxis_title='Tipos', height=3000))
     # st.plotly_chart(graph_type.update_layout(title='Gráfico dos Tipos', xaxis_title='Quantidade', yaxis_title='Tipos', height=3000,yaxis=dict(categoryorder='total ascending')))
-elif option == 'Quantidade por tipos principais':
-    colunas_eficacia_ataque = ['normal_attack_effectiveness', 'fire_attack_effectiveness',
-                           'water_attack_effectiveness', 'electric_attack_effectiveness',
-                           'grass_attack_effectiveness', 'ice_attack_effectiveness',
-                           'fighting_attack_effectiveness', 'poison_attack_effectiveness',
-                           'ground_attack_effectiveness', 'fly_attack_effectiveness',
-                           'psychic_attack_effectiveness', 'bug_attack_effectiveness',
-                           'rock_attack_effectiveness', 'ghost_attack_effectiveness',
-                           'dragon_attack_effectiveness', 'dark_attack_effectiveness',
-                           'steel_attack_effectiveness', 'fairy_attack_effectiveness']
 
-    # Calcula o número de valores únicos em cada coluna.
-    fire_type = pokemon_df[pokemon_df['typing'] == 'Fire']
-    valores_unicos_por_coluna =  fire_type[colunas_eficacia_ataque].nunique()
-
-    # Cria um gráfico de barras empilhadas interativo usando Plotly e Streamlit.
-    fig = px.bar(valores_unicos_por_coluna, x=valores_unicos_por_coluna.index, y=valores_unicos_por_coluna.values)
-    fig.update_layout(
-        title="Distribuição de Valores Únicos nas Colunas de Eficácia de Ataque",
-        xaxis_title="Coluna de Eficácia de Ataque",
-        yaxis_title="Número de Valores Únicos",
-        xaxis_tickangle=-45,
-    )
-    st.plotly_chart(fig)
-    
-    
     
 elif option == 'Porcentagem de espécies pelo formato':
     graph_format = go.Figure(data=go.Pie(labels=format_information.index, values=format_information.values))
@@ -107,6 +82,33 @@ elif option == 'Gráfico de dispersão':
     grath_dispersal = px.scatter(pokemon_df, x='height', y='weight', title='Relação entre Altura e Peso dos Pokémon',
                  labels={'height': 'Altura', 'weight': 'Peso'})
     st.plotly_chart(grath_dispersal)
+elif option == 'grafico de relação ataques efetivos e tipos':
+    colunas_eficacia_ataque = ['normal_attack_effectiveness', 'fire_attack_effectiveness',
+                           'water_attack_effectiveness', 'electric_attack_effectiveness',
+                           'grass_attack_effectiveness', 'ice_attack_effectiveness',
+                           'fighting_attack_effectiveness', 'poison_attack_effectiveness',
+                           'ground_attack_effectiveness', 'fly_attack_effectiveness',
+                           'psychic_attack_effectiveness', 'bug_attack_effectiveness',
+                           'rock_attack_effectiveness', 'ghost_attack_effectiveness',
+                           'dragon_attack_effectiveness', 'dark_attack_effectiveness',
+                           'steel_attack_effectiveness', 'fairy_attack_effectiveness']
+
+    # Calcula o número de valores únicos em cada coluna.
+    fire_type = pokemon_df[pokemon_df['typing'] == 'Fire']
+    valores_unicos_por_coluna =  fire_type[colunas_eficacia_ataque].nunique()
+
+    # Cria um gráfico de barras empilhadas interativo usando Plotly e Streamlit.
+    fig = px.bar(valores_unicos_por_coluna, x=valores_unicos_por_coluna.index, y=valores_unicos_por_coluna.values)
+    fig.update_layout(
+        title="Distribuição de Valores Únicos nas Colunas de Eficácia de Ataque",
+        xaxis_title="Coluna de Eficácia de Ataque",
+        yaxis_title="Número de Valores Únicos",
+        xaxis_tickangle=-45,
+    )
+    st.plotly_chart(fig)
+    
+    
+
 elif option == 'Clusterização':
     pokemon_features, pca1, pca2 = tratamento_dados.clusterizar_df()
 

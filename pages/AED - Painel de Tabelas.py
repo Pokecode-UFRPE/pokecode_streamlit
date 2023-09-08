@@ -1,52 +1,65 @@
-import streamlit as st
-import pandas as pd
 import random
+import pandas as pd
+import streamlit as st
 
-with open('assets\css\style.css') as f:
+st.set_page_config(
+    page_title="POKECODE",
+    page_icon="assets\icons\logo1.png",
+    initial_sidebar_state="collapsed",
+)
+
+with open('assets/css/style.css') as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-pokemon_df = pd.read_parquet("data\pokemon.parquet")
+pokemon_df = pd.read_parquet("data/pokemon.parquet")
 # CODIGO QUE RETIRA OS DUPICADAS DE NÚMERO DA POKEDEX
 pokemon_df = pokemon_df.drop_duplicates(subset='pokedex_number')
 # adicionando os links das imagens em uma nova coluna no banco
 pokemon_df['image'] = ''
-pokemon_df['image'] = pokemon_df['pokedex_number'].apply(lambda x: f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{x}.png')
+pokemon_df['image'] = pokemon_df['pokedex_number'].apply(
+    lambda x: f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{x}.png')
 
 
 def generate_data_editor(result):
     return st.data_editor(
-    result,
-    column_config={
-        # precisa criar id diferente se não dá conflito quando chama o mesmo banco na busca com mais de um parametro
-        "id": st.column_config.TextColumn(
+        result,
+        column_config={
+            # precisa criar id diferente se não dá conflito quando chama o mesmo banco na busca com mais de um parametro
+            "id": st.column_config.TextColumn(
                 str(random.randint(1, 1000))
-        ),
-        "image": st.column_config.ImageColumn(
-            "Image"
-        )
-    },
-    hide_index=True, width=1000
+            ),
+            "image": st.column_config.ImageColumn(
+                "Image"
+            )
+        },
+        hide_index=True, width=1000
     )
 
 
 def search_by_type(pokemon_type):
-    return pokemon_df.loc[pokemon_df['typing'].str.contains(pokemon_type), ['pokedex_number', 'name', 'genus', 'typing', 'image']]
+    return pokemon_df.loc[
+        pokemon_df['typing'].str.contains(pokemon_type), ['pokedex_number', 'name', 'genus', 'typing', 'image']]
 
 
 def search_by_shape(pokemon_shape):
-    return pokemon_df.loc[pokemon_df['shape'].str.contains(pokemon_shape), ['pokedex_number', 'name', 'genus', 'shape', 'image']]
+    return pokemon_df.loc[
+        pokemon_df['shape'].str.contains(pokemon_shape), ['pokedex_number', 'name', 'genus', 'shape', 'image']]
 
 
 def search_by_gen(pokemon_gen):
-    return pokemon_df.loc[pokemon_df['gen_introduced'] == pokemon_gen, ['pokedex_number', 'name', 'genus', 'gen_introduced', 'image']]
+    return pokemon_df.loc[
+        pokemon_df['gen_introduced'] == pokemon_gen, ['pokedex_number', 'name', 'genus', 'gen_introduced', 'image']]
 
 
 def search_by_color(pokemon_color):
-    return pokemon_df.loc[pokemon_df['primary_color'].str.contains(pokemon_color), ['pokedex_number', 'name', 'genus', 'primary_color', 'image']]
+    return pokemon_df.loc[
+        pokemon_df['primary_color'].str.contains(pokemon_color), ['pokedex_number', 'name', 'genus', 'primary_color',
+                                                                  'image']]
 
 
 def search_is_baby():
-    return pokemon_df.loc[pokemon_df['baby_pokemon'] == True, ['pokedex_number', 'name', 'genus', 'baby_pokemon', 'image']]
+    return pokemon_df.loc[
+        pokemon_df['baby_pokemon'] == True, ['pokedex_number', 'name', 'genus', 'baby_pokemon', 'image']]
 
 
 def search_is_legendary():
@@ -57,12 +70,13 @@ def search_is_mythical():
     return pokemon_df.loc[pokemon_df['mythical'] == True, ['pokedex_number', 'name', 'genus', 'mythical', 'image']]
 
 
+
 # MAIN PAGE START --
 st.image("assets\icons\logo2.png")
-st.markdown('<h1 class="site-title">Visualização do DF com filtros</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="site-title">Visualização do DataFrame</h1>', unsafe_allow_html=True)
 st.markdown('<h3 class="site-subt">Selecione o filtro de busca:</h3>', unsafe_allow_html=True)
 
-with st.expander("Buscar pelo tipo"):
+with st.expander("Busca por tipo"):
     types = pokemon_df.loc[~pokemon_df['typing'].str.contains('~'), 'typing'].unique()
     pokemon_type = st.selectbox(
         'Pesquise pelo tipo do seu pokemon:',
@@ -71,7 +85,7 @@ with st.expander("Buscar pelo tipo"):
         result = search_by_type(pokemon_type)
         generate_data_editor(result)
 
-with st.expander("Buscar pelo formato"):
+with st.expander("Busca por formato"):
     shapes = pokemon_df['shape'].unique()
     pokemon_shape = st.selectbox(
         'Pesquise pelo formato com que ele se parece:',
@@ -80,7 +94,7 @@ with st.expander("Buscar pelo formato"):
         result1 = search_by_shape(pokemon_shape)
         generate_data_editor(result1)
 
-with st.expander("Buscar pela geração"):
+with st.expander("Busca por geração"):
     gens = pokemon_df['gen_introduced'].unique()
     pokemon_gen = st.selectbox(
         'Pesquise pela geração em que ele foi lançado:',
@@ -89,7 +103,7 @@ with st.expander("Buscar pela geração"):
         result2 = search_by_gen(pokemon_gen)
         generate_data_editor(result2)
 
-with st.expander("Buscar pela cor"):
+with st.expander("Busca por cor"):
     colors = pokemon_df['primary_color'].unique()
     pokemon_color = st.selectbox(
         'Pesquise pela sua cor principal:',
@@ -98,10 +112,10 @@ with st.expander("Buscar pela cor"):
         result3 = search_by_color(pokemon_color)
         generate_data_editor(result3)
 
-with st.expander("Buscar os pokémon por raridade"):
+with st.expander("Busca por raridade"):
     rarity = st.radio(
         "",
-        ["baby_pokemon", "legendary", "mythical"], 
+        ["baby_pokemon", "legendary", "mythical"],
         horizontal=True
     )
     if rarity == 'baby_pokemon':
@@ -116,11 +130,10 @@ with st.expander("Buscar os pokémon por raridade"):
         result6 = search_is_mythical()
         generate_data_editor(result6)
 
-
 with st.expander("Busca com mais de um parâmetro"):
     options = st.multiselect(
-    'Selecione todas as opções que deseja utilizar na busca',
-    ['tipo', 'formato', 'geração', 'cor'])
+        'Selecione todas as opções de filtro que deseja utilizar na busca',
+        ['tipo', 'formato', 'geração', 'cor'])
 
     if 'tipo' in options:
         pokemon_type_radio = st.radio(
@@ -182,6 +195,3 @@ with st.expander("Busca com mais de um parâmetro"):
                         result_df = result_df.rename(columns={'image_x': 'image', 'genus_x': 'genus', 'name_x': 'name'})
                         result_df = result_df.filter(regex='^(?!.*(_y)$)')
         generate_data_editor(result_df)
-
-        
-
