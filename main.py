@@ -21,7 +21,7 @@ show_pages (
         Page("main.py", "POKECODE", "📌"),
         Page("pages/AED - Painel de Gráficos.py", "Análise de Dados", "📈"),
         Page("pages/AED - Painel de Tabelas.py", "Visualização do DataFrame", "📊"),
-        Page("pages/ML - KNN.py", "Sistemas de Recomendação", "💬"),
+        Page("pages/ML - KNN.py", "Sistema de Recomendação", "💬"),
     ]  
 )
 
@@ -116,7 +116,7 @@ with col1:
         .custom-button:hover {
             opacity: 0.8;
         }
-        </style><button class="custom-button">Analise de daddos</button>
+        </style><button class="custom-button">Análise de Dados</button>
         """, unsafe_allow_html=True)
     
 with col2:
@@ -135,7 +135,7 @@ with col2:
         .custom-button:hover {
             opacity: 0.8;
         }
-        </style><button class="custom-button">Visualizaçãp do dataframe</button>
+        </style><button class="custom-button">Visualização do Dataframe</button>
         """, unsafe_allow_html=True)
     
 with col3: 
@@ -154,7 +154,7 @@ with col3:
         .custom-button:hover {
             opacity: 0.8;
         }
-        </style><button class="custom-button">Sistemas de recomendação</button>
+        </style><button class="custom-button">Sistema de Recomendação</button>
         """, unsafe_allow_html=True)
  
 st.markdown('<br><hr>', unsafe_allow_html=True) 
@@ -165,4 +165,4 @@ st.markdown('<p class="site-subt"><b>Equipe PokeCode</b><br> Alberson Alison de 
     
 st.markdown('<p class="site-subt"><b>Universidade Federal Rural de Pernambuco (UFRPE)</b><br><b>Departamento de Estatística e Informática</b><br>Projeto para as disciplinas de Projeto Interdisciplinar para Sistemas da Informação III e Desenvolvimento de Sistemas da Informação.</p>', unsafe_allow_html=True)    
 
-st.markdown('<hr>', unsafe_allow_html=True) 
+st.markdown('<hr>', unsafe_allow_html=True)
