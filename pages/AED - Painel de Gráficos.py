@@ -61,7 +61,8 @@ option = st.selectbox(
      'Porcentagem de espécies que possuem evolução', 
      'Quantidade de espécies por cor', 
      'Porcentagem de espécies por raridade',
-     'Gráfico de relação ataques efetivos e tipos', 
+     'Gráfico de relação ataques efetivos e tipos',
+     'Gráfico de felicidade', 
      'Gráfico de dispersão',      
      'Clusterização'])
 
@@ -99,6 +100,49 @@ elif option == 'Gráfico de dispersão':
                                  labels={'height': 'Altura', 'weight': 'Peso'})
     st.plotly_chart(grath_dispersal)
     
+elif option == 'Gráfico de felicidade':
+    """   pokemon_base_happiness = pokemon_df['base_happiness']
+        st.dataframe(pokemon_base_happiness)
+    """
+    valores_interessantes = [35, 70, 140, 50, 0]
+
+        # Conta as ocorrências de cada valor.
+    contagem_valores = pokemon_df['base_happiness'].value_counts().reindex(valores_interessantes, fill_value=0)
+
+    # Cria um gráfico de pizza para representar as proporções.
+    fig = px.pie(values=contagem_valores.values, names=contagem_valores.index,
+                title='Proporção de Valores de Base Happiness')
+
+    # Exibe o gráfico.
+    st.plotly_chart(fig)
+    # Filtra os Pokémon com 'base_happiness' igual a 0 e 'legendary' igual a True.
+    pokemon_felicidade_0_lendarios = pokemon_df[(pokemon_df['base_happiness'] == 0) & (pokemon_df['legendary'] == True)]
+
+    # Conta quantos Pokémon atendem a esses critérios.
+    contagem_felicidade_0_lendarios = len(pokemon_felicidade_0_lendarios)
+
+    # Filtra os Pokémon com 'legendary' igual a True.
+    pokemon_lendarios = pokemon_df[pokemon_df['legendary'] == True]
+
+    # Conta quantos Pokémon são lendários.
+    contagem_lendarios = len(pokemon_lendarios)
+
+    # Conta o número total de Pokémon no DataFrame.
+    numero_total_pokemon = len(pokemon_df)
+
+    # Cria um DataFrame para o gráfico de barras empilhadas.
+    dados_grafico = pd.DataFrame({
+        'Categoria': ['Pokémon com Felicidade 0', 'Pokémon Lendários', 'Número Total de Pokémon'],
+        'Quantidade': [contagem_felicidade_0_lendarios, contagem_lendarios, numero_total_pokemon]
+    })
+
+    # Cria um gráfico de barras empilhadas.
+    fig = px.bar(dados_grafico, x='Categoria', y='Quantidade',
+                labels={'Categoria': 'Categoria', 'Quantidade': 'Quantidade'},
+                title='Relação de Pokémon com Felicidade 0, Pokémon Lendários e Número Total de Pokémon')
+
+    # Exibe o gráfico.
+    st.plotly_chart(fig)  
     
 elif option == 'Gráfico de relação ataques efetivos e tipos':
     colunas_eficacia_ataque = ['normal_attack_effectiveness', 'fire_attack_effectiveness',
