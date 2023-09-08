@@ -21,7 +21,7 @@ show_pages (
         Page("main.py", "POKECODE", "📌"),
         Page("pages/AED - Painel de Gráficos.py", "Análise de Dados", "📈"),
         Page("pages/AED - Painel de Tabelas.py", "Visualização do DataFrame", "📊"),
-        Page("pages/ML - KNN.py", "Sistema de Recomendação", "💬"),
+        Page("pages/ML - KNN.py", "Sistemas de Recomendação", "💬"),
     ]  
 )
 
@@ -116,7 +116,7 @@ with col1:
         .custom-button:hover {
             opacity: 0.8;
         }
-        </style><button class="custom-button">Painel de Gráficos</button>
+        </style><button class="custom-button">Analise de daddos</button>
         """, unsafe_allow_html=True)
     
 with col2:
@@ -135,7 +135,7 @@ with col2:
         .custom-button:hover {
             opacity: 0.8;
         }
-        </style><button class="custom-button">Painel de Tabela</button>
+        </style><button class="custom-button">Visualizaçãp do dataframe</button>
         """, unsafe_allow_html=True)
     
 with col3: 
@@ -154,7 +154,7 @@ with col3:
         .custom-button:hover {
             opacity: 0.8;
         }
-        </style><button class="custom-button">Recomendações</button>
+        </style><button class="custom-button">Sistemas de recomendação</button>
         """, unsafe_allow_html=True)
  
 st.markdown('<br><hr>', unsafe_allow_html=True) 
