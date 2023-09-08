@@ -5,6 +5,15 @@ import plotly.graph_objects as go
 
 from data import tratamento_dados
 
+st.set_page_config(
+    page_title="POKECODE",
+    page_icon="assets\icons\logo1.png",
+    initial_sidebar_state="collapsed",
+)
+
+with open('assets/css/style.css') as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
 def obter_caracteristicas(row):
     caracteristicas = []
     if row['baby_pokemon']:
@@ -24,8 +33,6 @@ color_discrete_map = {
     'comum': '#FFE115'
 }
 
-with open('assets\css\style.css') as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 pokemon_df = pd.read_parquet("data\pokemon.parquet")
 # CODIGO QUE RETIRA OS DUPICADAS DE NÚMERO DA POKEDEX
 pokemon_df = pokemon_df.drop_duplicates(subset='pokedex_number')
@@ -42,34 +49,42 @@ raridade_df['comum'] = ~(raridade_df['baby_pokemon'] | raridade_df['legendary'] 
 raridade_df['raridade'] = raridade_df.apply(obter_caracteristicas, axis=1)
 rarity_information = raridade_df['raridade'].value_counts()
 
-st.subheader("Analise de Dados")
+st.image("assets\icons\logo2.png")
+st.markdown('<h1 class="site-title">Análise de Dados</h1>', unsafe_allow_html=True)
+
 option = st.selectbox(
-    'Selecione uma das opções para explanar os dados referentes a ela:',
-    ['Selecione um gráfico', 'Quantidade de espécies por tipo','Quantidade por tipos principais', 'Porcentagem de espécies pelo formato', 
-     'Quantidade de espécies pela geração', 'Porcentagem de espécies que evoluem', 'Contagem de espécies pela cor principal', 
-     'Porcentagem de espécies por raridade', 'Gráfico de dispersão','grafico de relação ataques efetivos e tipos', 'Clusterização'])
+    'Selecione uma das opções de gráficos para explorar os seus dados referentes:',
+    ['Explorar', 
+     'Quantidade de espécies por tipo',
+     'Porcentagem de espécies por formato', 
+     'Quantidade de espécies por geração', 
+     'Porcentagem de espécies que possuem evolução', 
+     'Quantidade de espécies por cor', 
+     'Porcentagem de espécies por raridade',
+     'Gráfico de relação ataques efetivos e tipos', 
+     'Gráfico de dispersão',      
+     'Clusterização'])
 
 # Exibe os dados correspondentes ao filtro selecionado
 if option == 'Quantidade de espécies por tipo':
     graph_type = go.Figure(data=go.Bar(y=type_information.index, x=type_information.values, orientation='h', marker=dict(color='#F55555')))
     st.plotly_chart(graph_type.update_layout(title='Gráfico dos Tipos', xaxis_title='Quantidade', yaxis_title='Tipos', height=3000))
     # st.plotly_chart(graph_type.update_layout(title='Gráfico dos Tipos', xaxis_title='Quantidade', yaxis_title='Tipos', height=3000,yaxis=dict(categoryorder='total ascending')))
-
     
-elif option == 'Porcentagem de espécies pelo formato':
+elif option == 'Porcentagem de espécies por formato':
     graph_format = go.Figure(data=go.Pie(labels=format_information.index, values=format_information.values))
     st.plotly_chart(graph_format.update_layout(title='Gráfico dos Formatos', height=600))
 
-elif option == 'Quantidade de espécies pela geração':
+elif option == 'Quantidade de espécies por geração':
     gen_information = gen_information.sort_index()
     graph_gen =  go.Figure(data=go.Bar(x=gen_information.index, y=gen_information.values, marker=dict(color='#F55555')))
     st.plotly_chart(graph_gen.update_layout(title='Gráfico das Gerações', xaxis_title='Gerações', yaxis_title='Quantidade', height=600))
 
-elif option == 'Porcentagem de espécies que evoluem':
+elif option == 'Porcentagem de espécies que possuem evolução':
     graph_evolve = go.Figure(data=go.Pie(labels=evolve_information.index, values=evolve_information.values, marker=dict(colors=['#B22222', '#008000'])))
     st.plotly_chart(graph_evolve.update_layout(title='Gráfico de possibilidade evolutiva', height=500))
 
-elif option == 'Contagem de espécies pela cor principal':
+elif option == 'Quantidade de espécies por cor':
     graph_color =  go.Figure(data=go.Bar(x=color_information.index, y=color_information.values, marker=dict(
         color=['#20B2AA', '#8B4513', '#32CD32', '#B22222', '#4B0082','gray', '#D3D3D3', '#DAA520', '#FF69B4', 'black'])))
     st.plotly_chart(graph_color.update_layout(title='Gráfico de quantidade por cor', xaxis_title='Cores', yaxis_title='Quantidade'))
@@ -79,10 +94,13 @@ elif option == 'Porcentagem de espécies por raridade':
     st.plotly_chart(graph_rarity.update_layout(title='Gráfico de raridades', height=600))
 
 elif option == 'Gráfico de dispersão':
-    grath_dispersal = px.scatter(pokemon_df, x='height', y='weight', title='Relação entre Altura e Peso dos Pokémon',
-                 labels={'height': 'Altura', 'weight': 'Peso'})
+    grath_dispersal = px.scatter(pokemon_df, x='height', y='weight', 
+                                 title='Relação entre Altura e Peso dos Pokémon',
+                                 labels={'height': 'Altura', 'weight': 'Peso'})
     st.plotly_chart(grath_dispersal)
-elif option == 'grafico de relação ataques efetivos e tipos':
+    
+    
+elif option == 'Gráfico de relação ataques efetivos e tipos':
     colunas_eficacia_ataque = ['normal_attack_effectiveness', 'fire_attack_effectiveness',
                            'water_attack_effectiveness', 'electric_attack_effectiveness',
                            'grass_attack_effectiveness', 'ice_attack_effectiveness',
@@ -92,6 +110,7 @@ elif option == 'grafico de relação ataques efetivos e tipos':
                            'rock_attack_effectiveness', 'ghost_attack_effectiveness',
                            'dragon_attack_effectiveness', 'dark_attack_effectiveness',
                            'steel_attack_effectiveness', 'fairy_attack_effectiveness']
+    
 
     # Calcula o número de valores únicos em cada coluna.
     fire_type = pokemon_df[pokemon_df['typing'] == 'Fire']
@@ -106,9 +125,7 @@ elif option == 'grafico de relação ataques efetivos e tipos':
         xaxis_tickangle=-45,
     )
     st.plotly_chart(fig)
-    
-    
-
+      
 elif option == 'Clusterização':
     pokemon_features, pca1, pca2 = tratamento_dados.clusterizar_df()
 
@@ -116,3 +133,4 @@ elif option == 'Clusterização':
     graph_clusters = px.scatter(pokemon_features, pca1, pca2, color='cluster_label',
                                 title='Gráfico de Clusters após PCA e Método do Cotovelo')
     st.plotly_chart(graph_clusters)
+    
