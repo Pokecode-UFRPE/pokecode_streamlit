@@ -5,7 +5,7 @@ import streamlit as st
 from sklearn.metrics import silhouette_score, silhouette_samples
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-
+from sklearn.cluster import DBSCAN
 from data import tratamento_dados
 
 st.set_page_config(
@@ -45,6 +45,8 @@ scaler = StandardScaler()
 pokemon_features[['hp', 'speed', 'height', 'weight']] = scaler.fit_transform(
     pokemon_features[['hp', 'speed', 'height', 'weight']])
 
+scaler_dbscan = StandardScaler()
+scaled_features_dbscan = scaler_dbscan.fit_transform(pokemon_features)
 
 
 # Coeficiente de silhueta
@@ -60,6 +62,8 @@ knn_model.fit(pokemon_features)
 knn_modelC = NearestNeighbors(n_neighbors=k_neighbors, metric='euclidean')
 knn_modelC.fit(pokemon_features_clusters)
 
+dbscan = DBSCAN(eps=0.5, min_samples=4, metric='euclidean')
+pokemon_clusters = dbscan.fit_predict(scaled_features_dbscan)
 # MAIN PAGE START --
 st.image("assets\icons\logo2.png")
 st.markdown('<h1 class="site-title">Sistema de Recomendação</h1>', unsafe_allow_html=True)
@@ -109,9 +113,26 @@ with st.expander("Recomendações de Pokémon"):
 
 st.markdown('<p class="site-subt"><b>DBSCAN</b></p>', unsafe_allow_html=True)
 
-with st.expander("Recomendações de Pokémon"):
-    st.write("DBSCAN")
-    #Colocar aqui o Funcionamento do DBSCAN no mesmo estilo das outros algoritmos
+with st.expander("Recomendações de Pokémon (DBSCAN)"):
+    pokemon_choose_dbscan = st.selectbox('Selecione um Pokémon (DBSCAN)', pokemon_df['name'], help='Selecione um Pokémon que você gosta')
+
+    if pokemon_choose_dbscan:
+        selected_pokemon_index_dbscan = pokemon_df[pokemon_df['name'] == pokemon_choose_dbscan].index[0]
+
+        # Encontrar o cluster do Pokémon de referência
+        selected_pokemon_cluster_dbscan = pokemon_clusters[selected_pokemon_index_dbscan]
+
+        # Encontrar índices dos Pokémon no mesmo cluster
+        similar_pokemon_indices_dbscan = [index for index, cluster in enumerate(pokemon_clusters) if
+                                       cluster == selected_pokemon_cluster_dbscan and index != selected_pokemon_index_dbscan]
+
+        st.subheader("Pokémon semelhantes (DBSCAN):")
+
+        colunas_dbscan = st.columns(10)
+        for i in range(10):
+            with colunas_dbscan[i]:
+                st.header(f"{i + 1}º")
+                st.image(pokemon_df.iloc[similar_pokemon_indices_dbscan[i]]['image'], caption=pokemon_df.iloc[similar_pokemon_indices_dbscan[i]]['name'], width=100)
     
 st.markdown('<h3 class="site-subt"><b>Comparação de Algoritmos</b></h3>', unsafe_allow_html=True)
 # Escrever resumo com informações sobre as métricas utilizadas
