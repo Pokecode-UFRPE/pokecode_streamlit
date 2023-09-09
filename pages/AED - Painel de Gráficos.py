@@ -56,12 +56,15 @@ option = st.selectbox(
     'Selecione uma das opções de gráficos para explorar os seus dados referentes:',
     ['Explorar', 
      'Quantidade de espécies por tipo',
+     'Quantidade por tipos principais',
+     'Relação pokémon água x Cor Azul',
      'Porcentagem de espécies por formato', 
      'Quantidade de espécies por geração', 
      'Porcentagem de espécies que possuem evolução', 
      'Quantidade de espécies por cor', 
      'Porcentagem de espécies por raridade',
-     'Gráfico de relação ataques efetivos e tipos', 
+     'Gráfico de relação ataques efetivos e tipos',
+     'Gráfico de felicidade', 
      'Gráfico de dispersão',      
      'Clusterização'])
 
@@ -70,7 +73,75 @@ if option == 'Quantidade de espécies por tipo':
     graph_type = go.Figure(data=go.Bar(y=type_information.index, x=type_information.values, orientation='h', marker=dict(color='#F55555')))
     st.plotly_chart(graph_type.update_layout(title='Gráfico dos Tipos', xaxis_title='Quantidade', yaxis_title='Tipos', height=3000))
     # st.plotly_chart(graph_type.update_layout(title='Gráfico dos Tipos', xaxis_title='Quantidade', yaxis_title='Tipos', height=3000,yaxis=dict(categoryorder='total ascending')))
+elif option == 'Quantidade por tipos principais':
+    typing_df = pokemon_df.copy()
     
+    # Modifique os valores da coluna 'typing' para manter apenas o primeiro tipo antes de '~'.
+    typing_df['typing'] = typing_df['typing'].apply(lambda x: x.split('~')[0])
+    st.dataframe(typing_df)
+    fig = px.bar(typing_df['typing'].value_counts(), x=typing_df['typing'].value_counts().index,
+             y=typing_df['typing'].value_counts().values,
+             labels={'x': 'Tipo Principal', 'y': 'Quantidade'},
+             title='Quantidade de Pokémon por Tipo Principal')
+
+    # Exiba o gráfico.
+    st.plotly_chart(fig)
+elif option == 'Relação pokémon água x Cor Azul':
+    pokemon_water = pokemon_df[pokemon_df['typing'] == 'Water']
+
+    # Conta quantos Pokémon do tipo 'Water' têm 'primary_color' igual a 'Blue'.
+    contagem_blue_water = len(pokemon_water[pokemon_water['primary_color'] == 'Blue'])
+
+    # Calcula a porcentagem de Pokémon do tipo 'Water' com 'primary_color' igual a 'Blue'.
+    porcentagem_blue_water = (contagem_blue_water / len(pokemon_water)) * 100
+
+    # Calcula a porcentagem de Pokémon do tipo 'Water' com 'primary_color' diferente de 'Blue'.
+    porcentagem_outras_cores = 100 - porcentagem_blue_water
+
+    # Cria um DataFrame para o gráfico de pizza.
+    dados_grafico = pd.DataFrame({
+        'Categoria': ['Blue', 'Outras Cores'],
+        'Porcentagem': [porcentagem_blue_water, porcentagem_outras_cores]
+    })
+
+    # Define as cores para o gráfico (azul para 'Blue' e preto para 'Outras Cores').
+    cores = ['#1f77b4', 'black']
+
+    # Cria um gráfico de pizza com cores personalizadas.
+    fig = px.pie(dados_grafico, names='Categoria', values='Porcentagem',
+                title='Porcentagem de Pokémon do Tipo "Water" com Cor Primária "Blue"',
+                color_discrete_sequence=cores)
+
+    # Exibe o gráfico.
+    st.plotly_chart(fig)
+    # Filtra os Pokémon do tipo 'Fire'.
+    pokemon_fire = pokemon_df[pokemon_df['typing'] == 'Fire']
+
+    # Conta quantos Pokémon do tipo 'Fire' têm 'primary_color' igual a 'Blue'.
+    contagem_blue_fire = len(pokemon_fire[pokemon_fire['primary_color'] == 'Blue'])
+
+    # Calcula a porcentagem de Pokémon do tipo 'Fire' com 'primary_color' igual a 'Blue'.
+    porcentagem_blue_fire = (contagem_blue_fire / len(pokemon_fire)) * 100
+
+    # Calcula a porcentagem de Pokémon do tipo 'Fire' com 'primary_color' diferente de 'Blue'.
+    porcentagem_outras_cores = 100 - porcentagem_blue_fire
+
+    # Cria um DataFrame para o gráfico de pizza.
+    dados_grafico = pd.DataFrame({
+        'Categoria': ['Blue', 'Outras Cores'],
+        'Porcentagem': [porcentagem_blue_fire, porcentagem_outras_cores]
+    })
+
+    # Define as cores para o gráfico (azul para 'Blue' e preto para 'Outras Cores').
+    cores = ['black','#1f77b4']
+
+    # Cria um gráfico de pizza com cores personalizadas.
+    fig = px.pie(dados_grafico, names='Categoria', values='Porcentagem',
+                title='Porcentagem de Pokémon do Tipo "Fire" com Cor Primária "Blue"',
+                color_discrete_sequence=cores)
+
+    # Exibe o gráfico.
+    st.plotly_chart(fig)
 elif option == 'Porcentagem de espécies por formato':
     graph_format = go.Figure(data=go.Pie(labels=format_information.index, values=format_information.values))
     st.plotly_chart(graph_format.update_layout(title='Gráfico dos Formatos', height=600))
@@ -98,7 +169,60 @@ elif option == 'Gráfico de dispersão':
                                  title='Relação entre Altura e Peso dos Pokémon',
                                  labels={'height': 'Altura', 'weight': 'Peso'})
     st.plotly_chart(grath_dispersal)
-    
+    grath_dispersal2 = px.scatter(pokemon_df, x='speed', y='attack',
+                             title='Relação entre Velocidade e Ataque dos Pokémon',
+                             labels={'speed': 'Velocidade', 'attack': 'Ataque'})
+
+    # Exiba o gráfico de dispersão.
+    st.plotly_chart(grath_dispersal2)
+
+
+
+
+
+
+
+elif option == 'Gráfico de felicidade':
+
+    valores_interessantes = [35, 70, 140, 50, 0]
+
+        # Conta as ocorrências de cada valor.
+    contagem_valores = pokemon_df['base_happiness'].value_counts().reindex(valores_interessantes, fill_value=0)
+
+    # Cria um gráfico de pizza para representar as proporções.
+    fig = px.pie(values=contagem_valores.values, names=contagem_valores.index,
+                title='Proporção de Valores de Base Happiness')
+
+    # Exibe o gráfico.
+    st.plotly_chart(fig)
+    # Filtra os Pokémon com 'base_happiness' igual a 0 e 'legendary' igual a True.
+    pokemon_felicidade_0_lendarios = pokemon_df[(pokemon_df['base_happiness'] == 0) & (pokemon_df['legendary'] == True)]
+
+    # Conta quantos Pokémon atendem a esses critérios.
+    contagem_felicidade_0_lendarios = len(pokemon_felicidade_0_lendarios)
+
+    # Filtra os Pokémon com 'legendary' igual a True.
+    pokemon_lendarios = pokemon_df[pokemon_df['legendary'] == True]
+
+    # Conta quantos Pokémon são lendários.
+    contagem_lendarios = len(pokemon_lendarios)
+
+    # Conta o número total de Pokémon no DataFrame.
+    numero_total_pokemon = len(pokemon_df)
+
+    # Cria um DataFrame para o gráfico de barras empilhadas.
+    dados_grafico = pd.DataFrame({
+        'Categoria': ['Pokémon com Felicidade 0', 'Pokémon Lendários', 'Número Total de Pokémon'],
+        'Quantidade': [contagem_felicidade_0_lendarios, contagem_lendarios, numero_total_pokemon]
+    })
+
+    # Cria um gráfico de barras empilhadas.
+    fig = px.bar(dados_grafico, x='Categoria', y='Quantidade',
+                labels={'Categoria': 'Categoria', 'Quantidade': 'Quantidade'},
+                title='Relação de Pokémon com Felicidade 0, Pokémon Lendários e Número Total de Pokémon')
+
+    # Exibe o gráfico.
+    st.plotly_chart(fig)  
     
 elif option == 'Gráfico de relação ataques efetivos e tipos':
     colunas_eficacia_ataque = ['normal_attack_effectiveness', 'fire_attack_effectiveness',
