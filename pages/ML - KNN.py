@@ -38,6 +38,7 @@ pokemon_df['image'] = pokemon_df['pokedex_number'].apply(
 selected_columns = ['typing', 'hp', 'speed', 'height', 'weight', 'shape', 'primary_color']
 pokemon_features = pokemon_df[selected_columns].copy()
 
+# Preparação KNNs
 # Aplicar codificação one-hot às colunas categóricas
 encoder = OneHotEncoder(sparse=False, handle_unknown='ignore')
 encoded_columns = pd.DataFrame(encoder.fit_transform(pokemon_features[['typing', 'shape', 'primary_color']]))
@@ -45,10 +46,11 @@ encoded_columns.columns = encoder.get_feature_names_out(['typing', 'shape', 'pri
 pokemon_features = pd.concat([pokemon_features, encoded_columns], axis=1)
 pokemon_features.drop(columns=['typing', 'shape', 'primary_color'], inplace=True)
 
-# Escalar as features numéricas
-scaler = StandardScaler()
-pokemon_features[['hp', 'speed', 'height', 'weight']] = scaler.fit_transform(
-    pokemon_features[['hp', 'speed', 'height', 'weight']])
+# Coeficiente de silhueta
+silhouette_avg = silhouette_score(pokemon_features_clusters, pokemon_features_clusters['cluster_label'])
+silhouette_values = silhouette_samples(pokemon_features_clusters, pokemon_features_clusters['cluster_label'])
+pokemon_features['silhouette_score'] = silhouette_values
+#st.write(f"Coeficiente de Silhueta Médio no KNN com cluster: {silhouette_avg}")
 
 # Configuração do modelo KNN
 k_neighbors = 20
@@ -59,10 +61,20 @@ knn_model.fit(pokemon_features)
 knn_modelC = NearestNeighbors(n_neighbors=k_neighbors, metric='euclidean')
 knn_modelC.fit(pokemon_features_clusters)
 
-# Configuração do modelo DBSCAN
-dbscan = DBSCAN(eps=0.5, min_samples=4, metric='euclidean')
-pokemon_clusters = dbscan.fit_predict(scaled_features_dbscan)
+# Preparação DBSCAN
+# Selecionar atributos numéricos para calcular a similaridade
+numeric_features = ['hp', 'attack', 'defense', 'special_attack', 'special_defense', 'speed']
 
+# Criar uma cópia do DataFrame com apenas os atributos numéricos
+numeric_df = pokemon_df[numeric_features]
+
+# Pré-processamento dos dados
+scaler = StandardScaler()
+scaled_numeric_df = scaler.fit_transform(numeric_df)
+
+# Aplicar DBSCAN para agrupamento
+dbscan = DBSCAN(eps=0.5, min_samples=4, metric='euclidean')
+pokemon_clusters = dbscan.fit_predict(scaled_numeric_df)
 # Início da página principal
 st.image("assets\icons\logo2.png")
 st.markdown('<h1 class="site-title">Sistema de Recomendação</h1>', unsafe_allow_html=True)
@@ -70,35 +82,84 @@ st.markdown('<h3 class="site-subt">Implementação de Machine Learning', unsafe_
 
 # Seção para K-Nearest Neighbors Puro
 st.markdown('<p class="site-subt"><b>K-Nearest Neighbors Puro</b></p>', unsafe_allow_html=True)
-# ...
-# Adicionar mais comentários explicativos se necessário
+
+with st.expander("Recomendações de Pokémon"):
+    pokemon_choose = st.selectbox('Escolha um Pokémon', pokemon_df['name'], help='Selecione um Pokémon que você gosta')
+    
+    if pokemon_choose:
+        selected_pokemon_index = pokemon_df[pokemon_df['name'] == pokemon_choose].index[0]
+        distances, indices = knn_model.kneighbors(pokemon_features.iloc[selected_pokemon_index].values.reshape(1, -1))
+        
+        st.write(distances)
+        st.subheader("Pokémon semelhantes:")
+        
+        if pokemon_choose:
+            selected_pokemon_index = pokemon_df[pokemon_df['name'] == pokemon_choose].index[0]
+            
+            distances, indices = knn_model.kneighbors(
+                pokemon_features.iloc[selected_pokemon_index].values.reshape(1, -1))
+            colunas = st.columns(10)
+            
+            for i in range(10):
+                with colunas[i]:
+                    st.header(f"{i + 1}º")
+                    st.image(pokemon_df.loc[indices[0][i], 'image'], caption=pokemon_df.loc[indices[0][i], 'name'],
+                             width=100)
 
 # Seção para K-Nearest Neighbors com Clusterização
+st.markdown('<p class="site-subt"><b>K-Nearest Neighbors com Clusterização</b></p>', unsafe_allow_html=True)
+
 with st.expander("Recomendações de Pokémon"):
-    st.selectbox('Escolha um Pokémon', pokemon_df['name'], help='Selecione um Pokémon que você gosta')
-    # ...
-    # Adicionar mais comentários explicativos se necessário
+    pokemon_choose = st.selectbox('Selecione um Pokémon', pokemon_df['name'],
+                                  help='Selecione um Pokémon que você gosta')
+    
+    if pokemon_choose:
+        selected_pokemon_index = pokemon_df[pokemon_df['name'] == pokemon_choose].index[0]
+        
+        distances, indices = knn_modelC.kneighbors(
+            pokemon_features_clusters.iloc[selected_pokemon_index].values.reshape(1, -1))
+        
+        st.write(distances)
+        st.subheader("Pokémon semelhantes:")
+        colunas = st.columns(10)
+        
+        for i in range(10):
+            with colunas[i]:
+                st.header(f"{i + 1}º")
+                st.image(pokemon_df.loc[indices[0][i], 'image'], caption=pokemon_df.loc[indices[0][i], 'name'],
+                         width=100)
 
 # Seção para DBSCAN
 st.markdown('<p class="site-subt"><b>DBSCAN</b></p>', unsafe_allow_html=True)
-with st.expander("Recomendações de Pokémon (DBSCAN)"):
-    st.selectbox('Selecione um Pokémon (DBSCAN)', pokemon_df['name'], help='Selecione um Pokémon que você gosta')
-    # ...
-    # Adicionar mais comentários explicativos se necessário
+
+with st.expander("Recomendações de Pokémon"):
+    pokemon_choose_dbscan = st.selectbox('Selete um Pokémon', pokemon_df['name'], help='Selecione um Pokémon que você gosta')
+
+    if pokemon_choose:
+        selected_pokemon_index_dbscan = pokemon_df[pokemon_df['name'] == pokemon_choose].index[0]
+
+        # Encontrar o cluster do Pokémon de referência
+        selected_pokemon_cluster = pokemon_clusters[selected_pokemon_index]
+
+        # Encontrar índices dos Pokémon no mesmo cluster
+        similar_pokemon_indices = [index for index, cluster in enumerate(pokemon_clusters) if
+                                   cluster == selected_pokemon_cluster and index != selected_pokemon_index]
+
+        st.subheader("Pokémon semelhantes:")
+
+
+        colunas_dbscan = st.columns(10)
+        for i in range(10):
+            with colunas_dbscan[i]:
+                st.header(f"{i + 1}º")
+                st.image(pokemon_df.iloc[similar_pokemon_indices[i]]['image'], caption=pokemon_df.iloc[similar_pokemon_indices[i]]['name'], width=100)
 
 # Seção de comparação de algoritmos
 st.markdown('<h3 class="site-subt"><b>Comparação de Algoritmos</b></h3>', unsafe_allow_html=True)
 
 # Seção de comparação entre K-Nearest Neighbors Puro e K-Nearest Neighbors com Clusterização
-st.markdown('<p class="site-subt"><b>K-Nearest Neighbors Puro x K-Nearest Neighbors com Clusterização</b></p>', unsafe_allow_html=True)
-with st.expander("KNN Puro x KNN Cluster"):
-    st.write("")
-    # ...
-    # Adicionar mais comentários explicativos se necessário
-
-# Seção de comparação entre K-Nearest Neighbors com Clusterização e DBSCAN
-st.markdown('<p class="site-subt"><b>K-Nearest Neighbors com Clusterização x DBSCAN</b></p>', unsafe_allow_html=True)
-with st.expander("KNN Cluster x DBSCAN"):
+st.markdown('<p class="site-subt"><b>Qual algoritmo é mais adequado ao sistema?</b></p>', unsafe_allow_html=True)
+with st.expander("KNN Puro x KNN com Clusterização x DBSCAN"):
     st.write("")
     # ...
     # Adicionar mais comentários explicativos se necessário
