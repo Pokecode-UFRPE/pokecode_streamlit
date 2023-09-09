@@ -2,6 +2,18 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
+import numpy as np
+from sklearn.metrics import jaccard_score
+
+    
+def distancia_euclediana(pokemon1, pokemon2):
+
+    a = np.array(pokemon1)
+    b = np.array(pokemon2)
+    # Cálculo da distância Euclidiana para colunas numéricas.
+    distancia_euclidiana = np.linalg.norm(a - b)
+    return distancia_euclidiana
+
 
 def tratar_df():
     pokemon_df = pd.read_parquet('data/pokemon.parquet')
