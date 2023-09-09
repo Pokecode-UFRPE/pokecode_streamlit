@@ -61,6 +61,27 @@ knn_model.fit(pokemon_features)
 knn_modelC = NearestNeighbors(n_neighbors=k_neighbors, metric='euclidean')
 knn_modelC.fit(pokemon_features_clusters)
 
+# Preparação Random Forest
+X = pokemon_features 
+y = pokemon_df['typing']
+
+# Dividir os dados em conjuntos de treinamento e teste
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Criar uma instância do modelo RandomForestClassifier
+rf_model = RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42)
+
+# Treinar o modelo
+rf_model.fit(X_train, y_train)
+
+# Fazer previsões
+y_pred = rf_model.predict(X_test)
+
+# Avaliar o desempenho
+from sklearn.metrics import accuracy_score
+accuracy = accuracy_score(y_test, y_pred)
+
 # Preparação DBSCAN
 # Pré-processamento dos dados
 scaler = StandardScaler()
@@ -124,6 +145,32 @@ with st.expander("Recomendações de Pokémon"):
                 st.image(pokemon_df.loc[indices[0][i], 'image'], caption=pokemon_df.loc[indices[0][i], 'name'],
                          width=100)
 
+# Seção para Random Forest
+st.markdown('<p class="site-subt"><b>Random Forest</b></p>', unsafe_allow_html=True)
+
+with st.expander("Recomendações de Pokémon"):
+    pokemon_choose_rf = st.selectbox('Opte por um Pokémon', pokemon_df['name'],
+                                  help='Selecione um Pokémon que você gosta')
+    
+    if pokemon_choose_rf:
+        # Fazer previsão com o modelo Random Forest
+        selected_pokemon_index_rf = pokemon_df[pokemon_df['name'] == pokemon_choose_rf].index[0]
+        selected_pokemon_features_rf = X.iloc[selected_pokemon_index_rf].values.reshape(1, -1)
+        predicted_typing_rf = rf_model.predict(selected_pokemon_features_rf)
+        
+        # Filtrar Pokémon com o mesmo tipo previsto
+        similar_pokemon_indices_rf = pokemon_df[pokemon_df['typing'] == predicted_typing_rf[0]].index
+        similar_pokemon_indices_rf = similar_pokemon_indices_rf[similar_pokemon_indices_rf != selected_pokemon_index_rf]
+
+        st.subheader("Pokémon semelhantes:")
+        colunas_rf = st.columns(10)
+        
+        for i in range(10):
+            with colunas_rf[i]:
+                st.header(f"{i + 1}º")
+                st.image(pokemon_df.loc[similar_pokemon_indices_rf[i], 'image'],
+                         caption=pokemon_df.loc[similar_pokemon_indices_rf[i], 'name'], width=100)
+
 # Seção para DBSCAN
 st.markdown('<p class="site-subt"><b>DBSCAN</b></p>', unsafe_allow_html=True)
 
@@ -149,42 +196,13 @@ with st.expander("Recomendações de Pokémon"):
                 st.image(pokemon_df.iloc[similar_pokemon_indices[i]]['image'],
                          caption=pokemon_df.iloc[similar_pokemon_indices[i]]['name'], width=100)
 
-# Seção para Random Forest
-st.markdown('<p class="site-subt"><b>Random Forest</b></p>', unsafe_allow_html=True)
-
-with st.expander("Recomendações de Pokémon (Random Forest)"):
-    pokemon_choose_rf = st.selectbox('Opte um Pokémon', pokemon_df['name'],
-                                  help='Selecione um Pokémon que você gosta')
-    
-    if pokemon_choose_rf:
-        # Fazer previsão com o modelo Random Forest
-        selected_pokemon_index_rf = pokemon_df[pokemon_df['name'] == pokemon_choose_rf].index[0]
-        selected_pokemon_features_rf = X.iloc[selected_pokemon_index_rf].values.reshape(1, -1)
-        predicted_typing_rf = rf_model.predict(selected_pokemon_features_rf)
-        
-        # Filtrar Pokémon com o mesmo tipo previsto
-        similar_pokemon_indices_rf = pokemon_df[pokemon_df['typing'] == predicted_typing_rf[0]].index
-        similar_pokemon_indices_rf = similar_pokemon_indices_rf[similar_pokemon_indices_rf != selected_pokemon_index_rf]
-
-        st.subheader("Pokémon semelhantes:")
-        colunas_rf = st.columns(10)
-        
-        for i in range(10):
-            with colunas_rf[i]:
-                st.header(f"{i + 1}º")
-                st.image(pokemon_df.loc[similar_pokemon_indices_rf[i], 'image'],
-                         caption=pokemon_df.loc[similar_pokemon_indices_rf[i], 'name'], width=100)
-
-# ...
-
-# Seção para Random Forest
-st.markdown('<p class="site-subt"><b>Random Forest</b></p>', unsafe_allow_html=True)
-
-# Seção de comparação entre K-Nearest Neighbors Puro e K-Nearest Neighbors com Clusterização
-st.markdown('<p class="site-subt"><b>Qual algoritmo é mais adequado ao sistema?</b></p>', unsafe_allow_html=True)
-with st.expander("KNN Puro x KNN com Clusterização x DBSCAN"):
-    st.write("")
-    # ...
-    # Adicionar mais comentários explicativos se necessário
-    
 st.markdown('<hr>', unsafe_allow_html=True) 
+
+# # Seção de comparação entre K-Nearest Neighbors Puro e K-Nearest Neighbors com Clusterização
+# st.markdown('<p class="site-subt"><b>Qual algoritmo é mais adequado ao sistema?</b></p>', unsafe_allow_html=True)
+# with st.expander("KNN Puro x KNN com Clusterização x Random Forest x DBSCAN "):
+#     st.write("")
+#     # ...
+#     # Adicionar mais comentários explicativos se necessário
+    
+# st.markdown('<hr>', unsafe_allow_html=True) 
