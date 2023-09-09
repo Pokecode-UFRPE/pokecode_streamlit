@@ -29,7 +29,7 @@ Nossa equipe está atualmente matriculada na Universidade Federal Rural de Perna
 
 ## 📩 Entre em Contato 
 
-Se você tiver dúvidas, sugestões ou apenas quiser dizer "olá", sinta-se à vontade para entrar em contato com nossa equipe:
+Se você tiver dúvidas, sugestões ou apenas quiser dizer "olá", sinta-se à vontade para entrar em contato com nossa equipe. Para obter detalhes completos da equipe, [clique aqui](#-equipe-pokecode).
 
 ## 🎉 Divirta-se explorando o mundo Pokémon com o PokeCode!
 
