@@ -91,6 +91,28 @@ scaled_numeric_df = scaler.fit_transform(pokemon_features)
 dbscan = DBSCAN(eps=6, min_samples=4, metric='euclidean')
 pokemon_clusters = dbscan.fit_predict(scaled_numeric_df)
 
+# Preparação do modelo Random Forest
+X = pokemon_features  # Seus recursos
+y = pokemon_df['typing']  # Sua coluna de destino (classes)
+
+# Dividir os dados em conjuntos de treinamento e teste
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Criar uma instância do modelo RandomForestClassifier
+rf_model = RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42)
+
+# Treinar o modelo
+rf_model.fit(X_train, y_train)
+
+# Fazer previsões
+y_pred = rf_model.predict(X_test)
+
+# Avaliar o desempenho (vamos usar a precisão como exemplo)
+from sklearn.metrics import accuracy_score
+accuracy = accuracy_score(y_test, y_pred)
+
+
 # Início da página principal
 st.image("assets\icons\logo2.png")
 st.markdown('<h1 class="site-title">Sistema de Recomendação</h1>', unsafe_allow_html=True)
