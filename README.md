@@ -25,11 +25,18 @@ Nossa equipe está atualmente matriculada na Universidade Federal Rural de Perna
 
 - **Ferramentas de Recomendação**: Receba recomendações personalizadas com base em suas preferências e estilo de jogo.
 
+- **Favoritar Pokémon**: Adicione seus Pokémon favoritos a uma lista especial para acesso rápido.
+
 ## 📩 Entre em Contato
 
-Se você tiver dúvidas, sugestões ou apenas quiser dizer "olá", sinta-se à vontade para entrar em contato com nossa equipe.
-{alberson.araujo,andre.figueiredo,enzo.kretli,gabriel.cafe,isis.nilo, pedro.henriquecorreia}@ufrpe.br
+Se você tiver dúvidas, sugestões ou apenas quiser dizer "olá", sinta-se à vontade para entrar em contato com nossa equipe:
+- Alberson Alison de Araújo (alberson.araujo@ufrpe.br)
+- André Filipe de Oliveira Figueiredo (andre.figueiredo@ufrpe.br)
+- Enzo Ferro Kretli (enzo.kretli@ufrpe.br)
+- Gabriel Café Nunes de Souza (gabriel.cafe@ufrpe.br)
+- Isis Maria Oliveira Nilo de Souza (isis.nilo@ufrpe.br)
+- Pedro Henrique Correia da Silva (pedro.henriquecorreia@ufrpe.br)
 
-# 🎉 Divirta-se explorando o mundo Pokémon com o PokeCode!
+## 🎉 Divirta-se explorando o mundo Pokémon com o PokeCode!
 
 ![Pikachu Feliz](https://i.pinimg.com/originals/b2/1a/18/b21a186beb29add8cfc1fe4188cc1841.gif)
