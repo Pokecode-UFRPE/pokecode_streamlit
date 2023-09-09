@@ -51,7 +51,6 @@ pokemon_features.drop(columns=['typing', 'shape', 'primary_color'], inplace=True
 silhouette_avg = silhouette_score(pokemon_features_clusters, pokemon_features_clusters['cluster_label'])
 silhouette_values = silhouette_samples(pokemon_features_clusters, pokemon_features_clusters['cluster_label'])
 pokemon_features['silhouette_score'] = silhouette_values
-#st.write(f"Coeficiente de Silhueta Médio no KNN com cluster: {silhouette_avg}")
 
 # Configuração do modelo KNN
 k_neighbors = 20
@@ -70,28 +69,6 @@ scaled_numeric_df = scaler.fit_transform(pokemon_features)
 # Aplicar DBSCAN para agrupamento
 dbscan = DBSCAN(eps=5, min_samples=5, metric='euclidean')
 pokemon_clusters = dbscan.fit_predict(scaled_numeric_df)
-
-# Preparação do modelo Random Forest
-X = pokemon_features  # Seus recursos
-y = pokemon_df['typing']  # Sua coluna de destino (classes)
-
-# Dividir os dados em conjuntos de treinamento e teste
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Criar uma instância do modelo RandomForestClassifier
-rf_model = RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42)
-
-# Treinar o modelo
-rf_model.fit(X_train, y_train)
-
-# Fazer previsões
-y_pred = rf_model.predict(X_test)
-
-# Avaliar o desempenho (vamos usar a precisão como exemplo)
-from sklearn.metrics import accuracy_score
-accuracy = accuracy_score(y_test, y_pred)
-
 
 # Início da página principal
 st.image("assets\icons\logo2.png")
@@ -200,8 +177,8 @@ with st.expander("Recomendações de Pokémon (Random Forest)"):
 
 # ...
 
-# Seção de comparação de algoritmos
-st.markdown('<h3 class="site-subt"><b>Comparação de Algoritmos</b></h3>', unsafe_allow_html=True)
+# Seção para Random Forest
+st.markdown('<p class="site-subt"><b>Random Forest</b></p>', unsafe_allow_html=True)
 
 # Seção de comparação entre K-Nearest Neighbors Puro e K-Nearest Neighbors com Clusterização
 st.markdown('<p class="site-subt"><b>Qual algoritmo é mais adequado ao sistema?</b></p>', unsafe_allow_html=True)
