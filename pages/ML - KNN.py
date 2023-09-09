@@ -88,7 +88,7 @@ scaler = StandardScaler()
 scaled_numeric_df = scaler.fit_transform(pokemon_features)
 
 # Aplicar DBSCAN para agrupamento
-dbscan = DBSCAN(eps=5, min_samples=5, metric='euclidean')
+dbscan = DBSCAN(eps=6, min_samples=4, metric='euclidean')
 pokemon_clusters = dbscan.fit_predict(scaled_numeric_df)
 
 # Início da página principal
@@ -151,7 +151,7 @@ st.markdown('<p class="site-subt"><b>Random Forest</b></p>', unsafe_allow_html=T
 with st.expander("Recomendações de Pokémon"):
     pokemon_choose_rf = st.selectbox('Opte por um Pokémon', pokemon_df['name'],
                                   help='Selecione um Pokémon que você gosta')
-    
+
     if pokemon_choose_rf:
         # Fazer previsão com o modelo Random Forest
         selected_pokemon_index_rf = pokemon_df[pokemon_df['name'] == pokemon_choose_rf].index[0]

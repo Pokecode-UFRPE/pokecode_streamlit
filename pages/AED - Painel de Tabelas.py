@@ -81,6 +81,7 @@ with st.expander("Busca por tipo"):
     pokemon_type = st.selectbox(
         'Pesquise pelo tipo do seu pokemon:',
         (types))
+
     if pokemon_type:
         result = search_by_type(pokemon_type)
         generate_data_editor(result)
@@ -90,6 +91,7 @@ with st.expander("Busca por formato"):
     pokemon_shape = st.selectbox(
         'Pesquise pelo formato com que ele se parece:',
         (shapes))
+
     if pokemon_shape:
         result1 = search_by_shape(pokemon_shape)
         generate_data_editor(result1)
@@ -99,6 +101,7 @@ with st.expander("Busca por geração"):
     pokemon_gen = st.selectbox(
         'Pesquise pela geração em que ele foi lançado:',
         (gens))
+
     if pokemon_gen:
         result2 = search_by_gen(pokemon_gen)
         generate_data_editor(result2)
@@ -108,6 +111,7 @@ with st.expander("Busca por cor"):
     pokemon_color = st.selectbox(
         'Pesquise pela sua cor principal:',
         (colors))
+
     if pokemon_color:
         result3 = search_by_color(pokemon_color)
         generate_data_editor(result3)
@@ -143,6 +147,7 @@ with st.expander("Busca com mais de um parâmetro"):
             help='Selecione o tipo desejado',
             horizontal=True
         )
+
     if 'formato' in options:
         pokemon_shape_radio = st.radio(
             'Informe o formato',
@@ -151,6 +156,7 @@ with st.expander("Busca com mais de um parâmetro"):
             help='Selecione o formato desejado',
             horizontal=True
         )
+
     if 'geração' in options:
         pokemon_generation_radio = st.radio(
             'Informe a geração',
@@ -159,6 +165,7 @@ with st.expander("Busca com mais de um parâmetro"):
             help='Selecione a geração desejada',
             horizontal=True
         )
+
     if 'cor' in options:
         pokemon_color_radio = st.radio(
             'Informe a cor',
@@ -167,6 +174,7 @@ with st.expander("Busca com mais de um parâmetro"):
             help='Selecione a cor desejada',
             horizontal=True
         )
+
     if st.button('Buscar'):
         union_list = []
         if 'tipo' in options and pokemon_type_radio:
@@ -187,11 +195,14 @@ with st.expander("Busca com mais de um parâmetro"):
         if len(radios_selcted) > 0:
             count = 0
             result_df = union_list[0]
+            
             for i in range(1, len(union_list)):
                 if union_list[i] is not None:
                     count += 1
                     result_df = result_df.merge(union_list[i], on="pokedex_number", how="inner")
+                   
                     if count >= 1:
                         result_df = result_df.rename(columns={'image_x': 'image', 'genus_x': 'genus', 'name_x': 'name'})
                         result_df = result_df.filter(regex='^(?!.*(_y)$)')
+                        
         generate_data_editor(result_df)
