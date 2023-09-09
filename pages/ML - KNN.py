@@ -62,19 +62,14 @@ knn_modelC = NearestNeighbors(n_neighbors=k_neighbors, metric='euclidean')
 knn_modelC.fit(pokemon_features_clusters)
 
 # Preparação DBSCAN
-# Selecionar atributos numéricos para calcular a similaridade
-numeric_features = ['hp', 'attack', 'defense', 'special_attack', 'special_defense', 'speed']
-
-# Criar uma cópia do DataFrame com apenas os atributos numéricos
-numeric_df = pokemon_df[numeric_features]
-
 # Pré-processamento dos dados
 scaler = StandardScaler()
-scaled_numeric_df = scaler.fit_transform(numeric_df)
+scaled_numeric_df = scaler.fit_transform(pokemon_features)
 
 # Aplicar DBSCAN para agrupamento
-dbscan = DBSCAN(eps=0.5, min_samples=4, metric='euclidean')
+dbscan = DBSCAN(eps=5, min_samples=5, metric='euclidean')
 pokemon_clusters = dbscan.fit_predict(scaled_numeric_df)
+
 # Início da página principal
 st.image("assets\icons\logo2.png")
 st.markdown('<h1 class="site-title">Sistema de Recomendação</h1>', unsafe_allow_html=True)
@@ -135,24 +130,25 @@ st.markdown('<p class="site-subt"><b>DBSCAN</b></p>', unsafe_allow_html=True)
 with st.expander("Recomendações de Pokémon"):
     pokemon_choose_dbscan = st.selectbox('Selete um Pokémon', pokemon_df['name'], help='Selecione um Pokémon que você gosta')
 
-    if pokemon_choose:
-        selected_pokemon_index_dbscan = pokemon_df[pokemon_df['name'] == pokemon_choose].index[0]
+    if pokemon_choose_dbscan:
+        selected_pokemon_index_dbscan = pokemon_df[pokemon_df['name'] == pokemon_choose_dbscan].index[0]
 
         # Encontrar o cluster do Pokémon de referência
-        selected_pokemon_cluster = pokemon_clusters[selected_pokemon_index]
+        selected_pokemon_cluster = pokemon_clusters[selected_pokemon_index_dbscan]
 
         # Encontrar índices dos Pokémon no mesmo cluster
         similar_pokemon_indices = [index for index, cluster in enumerate(pokemon_clusters) if
-                                   cluster == selected_pokemon_cluster and index != selected_pokemon_index]
+                                   cluster == selected_pokemon_cluster and index != selected_pokemon_index_dbscan]
 
         st.subheader("Pokémon semelhantes:")
-
 
         colunas_dbscan = st.columns(10)
         for i in range(10):
             with colunas_dbscan[i]:
                 st.header(f"{i + 1}º")
-                st.image(pokemon_df.iloc[similar_pokemon_indices[i]]['image'], caption=pokemon_df.iloc[similar_pokemon_indices[i]]['name'], width=100)
+                st.image(pokemon_df.iloc[similar_pokemon_indices[i]]['image'],
+                         caption=pokemon_df.iloc[similar_pokemon_indices[i]]['name'], width=100)
+
 
 # Seção de comparação de algoritmos
 st.markdown('<h3 class="site-subt"><b>Comparação de Algoritmos</b></h3>', unsafe_allow_html=True)
