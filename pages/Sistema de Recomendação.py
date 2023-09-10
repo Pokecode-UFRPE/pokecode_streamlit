@@ -60,7 +60,7 @@ st.markdown('<h1 class="site-title">Sistema de Recomendação</h1>', unsafe_allo
 
 # Preparação KNNs
 # Aplicar codificação one-hot às colunas categóricas
-encoder = OneHotEncoder(sparse=False, handle_unknown='ignore')
+encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
 encoded_columns = pd.DataFrame(encoder.fit_transform(pokemon_features[['typing', 'shape', 'primary_color']]))
 encoded_columns.columns = encoder.get_feature_names_out(['typing', 'shape', 'primary_color'])
 pokemon_features = pd.concat([pokemon_features, encoded_columns], axis=1)

@@ -25,8 +25,8 @@ st.markdown('<h1 class="site-title">Ánalise Comparativa</h1>', unsafe_allow_htm
 st.markdown('<h3 class="site-subt">Escolha dois Pokémons para comparar:</h3>', unsafe_allow_html=True)
 
 # caixas para selecionar pokémon 1 e 2
-pokemon_a = st.selectbox('Escolha o primeiro Pokémon', pokemon_df['name'], help='Selecione um Pokémon que você gosta')
-pokemon_b = st.selectbox('Escolha o segundo Pokémon', pokemon_df['name'], help='Selecione outro Pokémon que você gosta')
+pokemon_a = st.selectbox('Escolha o primeiro Pokémon', pokemon_df['name'])
+pokemon_b = st.selectbox('Escolha o segundo Pokémon', pokemon_df['name'])
 pokemon_features = tratamento_dados.tratar_df()
 
 if st.button('Calcular Distância Euclidiana'):

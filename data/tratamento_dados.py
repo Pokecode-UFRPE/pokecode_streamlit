@@ -26,7 +26,7 @@ def tratar_df():
     pokemon_features.drop(columns=['typing'], inplace=True)
 
     # PASSANDO O ONEHOT PARA GERAR AS COLUNAS BOOL DOS DADOS TEXTUAIS
-    encoder = OneHotEncoder(sparse=False, handle_unknown='ignore')
+    encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
     encoded_columns_tipos = pd.DataFrame(encoder.fit_transform(pokemon_features[['tipe1', 'tipe2']]))
     encoded_columns_tipos.columns = encoder.get_feature_names_out(['tipe1', 'tipe2'])
     encoded_columns = pd.DataFrame(encoder.fit_transform(pokemon_features[['shape', 'primary_color']]))
