@@ -10,7 +10,8 @@ parquet = str(current_path / "data" / "pokemon.parquet")
 logo1 = current_path / "assets" / "icons" / "logo1.png"
 st.set_page_config(
     page_title="POKECODE",
-    page_icon=str(logo1),
+    #page_icon=str(logo1),
+    page_icon="assets\icons\logo1.png",
     initial_sidebar_state="collapsed",
 )
 
@@ -77,8 +78,10 @@ def search_is_mythical():
 
 
 # MAIN PAGE START --
-logo2 = current_path / "assets" / "icons" / "logo2.png"
-st.image(str(logo2))
+# logo2 = current_path / "assets" / "icons" / "logo2.png"
+# st.image(str(logo2))
+
+st.image("assets\icons\logo2.png")
 st.markdown('<h1 class="site-title">Visualização do DataFrame</h1>', unsafe_allow_html=True)
 st.markdown('<h3 class="site-subt">Selecione o filtro de busca:</h3>', unsafe_allow_html=True)
 

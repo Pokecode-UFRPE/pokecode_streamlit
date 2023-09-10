@@ -21,7 +21,8 @@ css_path = str(current_path / "assets" / "css" / "style.css")
 
 st.set_page_config(
     page_title="POKECODE",
-    page_icon=str(logo1),
+    #page_icon=str(logo1),
+    page_icon="assets\icons\logo1.png",
     initial_sidebar_state="collapsed",
 )
 
@@ -50,9 +51,12 @@ selected_columns = ['typing', 'hp', 'speed', 'height', 'weight', 'shape', 'prima
 pokemon_features = pokemon_df[selected_columns].copy()
 
 # Início da página principal
-st.image(str(logo2))
+# logo2 = current_path / "assets" / "icons" / "logo2.png"
+# st.image(str(logo2))
+
+st.image("assets\icons\logo2.png")
 st.markdown('<h1 class="site-title">Sistema de Recomendação</h1>', unsafe_allow_html=True)
-st.markdown('<h3 class="site-subt">Implementação de Machine Learning', unsafe_allow_html=True)
+# st.markdown('<h3 class="site-subt">Implementação de Machine Learning', unsafe_allow_html=True)
 
 # Preparação KNNs
 # Aplicar codificação one-hot às colunas categóricas
@@ -214,6 +218,7 @@ scaled_numeric_df = scaler.fit_transform(pokemon_features)
 dbscan = DBSCAN(eps=5, min_samples=5, metric='euclidean')
 pokemon_clusters = dbscan.fit_predict(scaled_numeric_df)
 
+st.markdown('<h3 class="site-subt"><b>Implementação de Machine Learning</b></h3>', unsafe_allow_html=True)
 # Seção para K-Nearest Neighbors Puro
 st.markdown('<p class="site-subt"><b>K-Nearest Neighbors</b></p>', unsafe_allow_html=True)
 
