@@ -15,7 +15,7 @@ css_path = str(current_path / "assets" / "css" / "style.css")
 st.set_page_config(
     page_title="POKECODE",
     #page_icon=str(logo1),
-    page_icon="assets\icons\logo1.png",
+    page_icon="assets/icons/logo1.png",
     initial_sidebar_state="collapsed",
 )
 
@@ -62,7 +62,7 @@ rarity_information = raridade_df['raridade'].value_counts()
 # logo2 = current_path / "assets" / "icons" / "logo2.png"
 # st.image(str(logo2))
 
-st.image("assets\icons\logo2.png")
+st.image("assets/icons/logo2.png")
 st.markdown('<h1 class="site-title">Análise de Dados</h1>', unsafe_allow_html=True)
 
 option = st.selectbox(

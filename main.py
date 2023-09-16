@@ -13,7 +13,7 @@ css_path = str(current_path / "assets" / "css" / "style.css")
 st.set_page_config(
     page_title="POKECODE",
     #page_icon=str(logo1),
-    page_icon="assets\icons\logo1.png",
+    page_icon="assets/icons/logo1.png",
     initial_sidebar_state="collapsed",
 )
 
@@ -84,7 +84,7 @@ def dataset():
 # logo2 = current_path / "assets" / "icons" / "logo2.png"
 # st.image(str(logo2))
 
-st.image("assets\icons\logo2.png")
+st.image("assets/icons/logo2.png")
 
 st.markdown('<h2 class="site-subt">Conheça o PokeCode</h2>', unsafe_allow_html=True)
 st.markdown(

@@ -11,7 +11,7 @@ css_path = str(current_path / "assets" / "css" / "style.css")
 
 st.set_page_config(
     page_title="POKECODE",
-    page_icon="assets\icons\logo1.png",
+    page_icon="assets/icons/logo1.png",
     initial_sidebar_state="collapsed",
 )
 
@@ -20,7 +20,7 @@ with open(css_path) as f:
 
 pokemon_df = pd.read_parquet("data/pokemon.parquet")
 
-st.image("assets\icons\logo2.png")
+st.image("assets/icons/logo2.png")
 st.markdown('<h1 class="site-title">Ánalise Comparativa</h1>', unsafe_allow_html=True)
 st.markdown('<h3 class="site-subt">Escolha dois Pokémons para comparar:</h3>', unsafe_allow_html=True)
 

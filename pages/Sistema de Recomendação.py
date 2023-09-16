@@ -22,7 +22,7 @@ css_path = str(current_path / "assets" / "css" / "style.css")
 st.set_page_config(
     page_title="POKECODE",
     #page_icon=str(logo1),
-    page_icon="assets\icons\logo1.png",
+    page_icon="assets/icons/logo1.png",
     initial_sidebar_state="collapsed",
 )
 
@@ -54,7 +54,7 @@ pokemon_features = pokemon_df[selected_columns].copy()
 # logo2 = current_path / "assets" / "icons" / "logo2.png"
 # st.image(str(logo2))
 
-st.image("assets\icons\logo2.png")
+st.image("assets/icons/logo2.png")
 st.markdown('<h1 class="site-title">Sistema de Recomendação</h1>', unsafe_allow_html=True)
 # st.markdown('<h3 class="site-subt">Implementação de Machine Learning', unsafe_allow_html=True)
 
