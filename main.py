@@ -5,6 +5,7 @@ import pandas as pd
 import streamlit as st
 from st_pages import Page, show_pages
 
+
 current_path = Path(__file__).resolve().parent
 file_path = str(current_path / "data" / "pokemon.csv")
 parquet = str(current_path / "data" / "pokemon.parquet")
@@ -22,6 +23,7 @@ show_pages(
         Page("main.py", " POKECODE", "📌"),
         Page("pages/AED - Painel de Gráficos.py", " Análise de Dados", "📈"),
         Page("pages/AED - Painel de Tabelas.py", " Visualização do DataFrame", "📊"),
+        Page("pages/K-Prototypes_Recomendacao.py", "Recomendação K-Prototypes", "📋"),
         Page("pages/Sistema de Recomendação.py", " Sistemas de Recomendação", "💬"),
         Page("pages/Painel_de_distancias.py", " Análise Comparativa", "📏"),
     ]

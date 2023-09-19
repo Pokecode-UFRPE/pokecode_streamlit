@@ -1,3 +1,4 @@
+# Importe as bibliotecas necessárias
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -7,12 +8,14 @@ from sklearn.metrics import silhouette_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Carregue o seu DataFrame de Pokémon, substitua 'novoDataFrame.csv' pelo nome do seu arquivo CSV
-arquivo_csv = 'novoDataFrame.csv'
+# Carregue o seu DataFrame de Pokémon a partir de um arquivo CSV (substitua 'novoDataFrame.csv' pelo nome do seu arquivo)
+arquivo_csv = '/home/gabrielcafe/Documents/UFRPE/PSI3/pokecode_streamlit/data/novoDataFrame.csv'
+
 
 # Título da aplicação
 st.title('Análise de Agrupamento de Dados com K-Prototypes: Um Estudo de Caso com Pokémon')
 
+# Função para carregar os dados com cache
 @st.cache_data
 def load_data():
     df = pd.read_csv(arquivo_csv)
