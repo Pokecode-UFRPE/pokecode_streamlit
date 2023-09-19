@@ -1,15 +1,31 @@
 .site-title {
     color: #0A0A0A;
 }
+
 .site-subt {
     color: #1A1A1A;
 }
+
 div[data-baseweb="select"] > div {
     background-color: white;
 }
+
 [data-testid=stSidebar] {
     background-color: #AACAFB;
-} 
+}
+
 [data-testid=stExpander] {
     background-color: #AACAFB;
+}
+
+.silhoute-badget-good {
+    color: green;
+}
+
+.silhoute-badget-ok {
+    color: orange;
+}
+
+.silhoute-badget-bad {
+    color: orangered;
 }

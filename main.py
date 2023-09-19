@@ -9,21 +9,21 @@ current_path = Path(__file__).resolve().parent
 file_path = str(current_path / "data" / "pokemon.csv")
 parquet = str(current_path / "data" / "pokemon.parquet")
 css_path = str(current_path / "assets" / "css" / "style.css")
-#logo1 = current_path / "assets" / "icons" / "logo1.png"
+logo1 = current_path / "assets" / "icons" / "logo1.png"
 st.set_page_config(
     page_title="POKECODE",
-    #page_icon=str(logo1),
-    page_icon="assets\icons\logo1.png",
+    page_icon=str(logo1),
     initial_sidebar_state="collapsed",
 )
 
 show_pages(
     [
-        Page("main.py", " POKECODE", "📌"),
-        Page("pages/AED - Painel de Gráficos.py", " Análise de Dados", "📈"),
-        Page("pages/AED - Painel de Tabelas.py", " Visualização do DataFrame", "📊"),
-        Page("pages/Sistema de Recomendação.py", " Sistemas de Recomendação", "💬"),
-        Page("pages/Painel_de_distancias.py", " Análise Comparativa", "📏"),
+        Page("main.py", "POKECODE", "📌"),
+        Page("pages/AED - Painel de Gráficos.py", "Análise de Dados", "📈"),
+        Page("pages/AED - Painel de Tabelas.py", "Visualização do DataFrame", "📊"),
+        Page("pages/Sistema de Recomendação.py", "Sistemas de Recomendação", "💬"),
+        Page("pages/Painel_de_distancias.py", "Painel de distâncias", "📏"),
+        Page("pages/Pedro - KMeans.py", "Pedro - KMeans", "📏"),
     ]
 )
 
@@ -81,11 +81,8 @@ def dataset():
 
 
 # MAIN PAGE START --
-# logo2 = current_path / "assets" / "icons" / "logo2.png"
-# st.image(str(logo2))
-
-st.image("assets\icons\logo2.png")
-
+logo2 = current_path / "assets" / "icons" / "logo2.png"
+st.image(str(logo2))
 st.markdown('<h2 class="site-subt">Conheça o PokeCode</h2>', unsafe_allow_html=True)
 st.markdown(
     '<p class="site-subt">O <b>POKECODE</b> tem como objetivo desenvolver uma solução que simplifique a pesquisa, aprendizado e acesso a informações sobre os Pokémon de interesse do usuário, utilizando dados de um dataset como base, a fim de aprimorar a experiência de jogo.</p>',
