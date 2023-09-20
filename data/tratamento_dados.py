@@ -18,7 +18,7 @@ def distancia_euclediana(pokemon1, pokemon2):
 def tratar_df():
     pokemon_df = pd.read_parquet('data/pokemon.parquet')
 
-    selected_columns = ['typing', 'hp', 'speed', 'height', 'weight', 'shape', 'primary_color', 'attack', 'defense', 'base_happiness']
+    selected_columns = ['typing', 'hp', 'speed', 'height', 'weight', 'shape', 'primary_color', 'attack', 'defense', 'special_attack', 'special_defense', 'base_happiness']
     pokemon_features = pokemon_df[selected_columns].copy()
 
     # GERANDO DUAS COLUNAS A PARTIR DA QUEBRA DA COLUNA DE TIPO
@@ -26,7 +26,7 @@ def tratar_df():
     pokemon_features.drop(columns=['typing'], inplace=True)
 
     # PASSANDO O ONEHOT PARA GERAR AS COLUNAS BOOL DOS DADOS TEXTUAIS
-    encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
+    encoder = OneHotEncoder(sparse=False, handle_unknown='ignore')
     encoded_columns_tipos = pd.DataFrame(encoder.fit_transform(pokemon_features[['tipe1', 'tipe2']]))
     encoded_columns_tipos.columns = encoder.get_feature_names_out(['tipe1', 'tipe2'])
     encoded_columns = pd.DataFrame(encoder.fit_transform(pokemon_features[['shape', 'primary_color']]))
@@ -45,9 +45,8 @@ def tratar_df():
     # CONCATENO OS TIPOS GENERICOS A FORMA E A COR
     pokemon_features = pd.concat([pokemon_features, encoded_columns, tipos_bool], axis=1)
     scaler = StandardScaler()
-    pokemon_features[['hp', 'speed', 'height', 'weight', 'attack', 'defense', 'base_happiness']] = scaler.fit_transform(pokemon_features[['hp', 'speed', 'height', 
-                                                                                                                                          'weight', 'attack', 'defense', 
-                                                                                                                                          'base_happiness']])
+    pokemon_features[['hp', 'speed', 'height', 'weight', 'attack', 'defense', 'special_attack', 'special_defense', 'base_happiness']] = scaler.fit_transform(pokemon_features[['hp', 'speed', 'height',  'special_attack',  'special_defense', 'weight', 'attack', 'defense', 'base_happiness']])
+    
     return pokemon_features
 
 def clusterizar_df():
