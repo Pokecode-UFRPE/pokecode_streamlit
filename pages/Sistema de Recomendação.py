@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import silhouette_score, silhouette_samples
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.decomposition import TruncatedSVD
 
 from data import tratamento_dados
 
@@ -83,6 +84,13 @@ knn_modelC.fit(pokemon_features_clusters)
 # Preparação Random Forest
 X = pokemon_features
 y = pokemon_df[['typing']]
+
+# Preparaçãp SVD
+svd = TruncatedSVD(n_components=15)
+componentes_svd = svd.fit_transform(pokemon_features_clusters)
+
+knn_model_svd = NearestNeighbors(n_neighbors=k_neighbors, metric='euclidean')
+knn_model_svd.fit(componentes_svd)
 
 # Seção de comparação e Análise
 st.markdown('<h3 class="site-subt"><b>Análises e Comparações</b></h3>', unsafe_allow_html=True)
@@ -223,7 +231,7 @@ st.markdown('<h3 class="site-subt"><b>Implementação de Machine Learning</b></h
 st.markdown('<p class="site-subt"><b>K-Nearest Neighbors</b></p>', unsafe_allow_html=True)
 
 with st.expander("Recomendações de Pokémon"):
-    pokemon_choose = st.selectbox('Escolha um Pokémon', pokemon_df['name'], help='Selecione um Pokémon que você gosta')
+    pokemon_choose = st.selectbox('Selecione um Pokémon', pokemon_df['name'], key = 'Rec KNN', help='Selecione um Pokémon que você gosta')
 
     if pokemon_choose:
         selected_pokemon_index = pokemon_df[pokemon_df['name'] == pokemon_choose].index[0]
@@ -250,8 +258,7 @@ with st.expander("Recomendações de Pokémon"):
 st.markdown('<p class="site-subt"><b>K-Nearest Neighbors com Clusterização</b></p>', unsafe_allow_html=True)
 
 with st.expander("Recomendações de Pokémon"):
-    pokemon_choose = st.selectbox('Selecione um Pokémon', pokemon_df['name'],
-                                  help='Selecione um Pokémon que você gosta')
+    pokemon_choose = st.selectbox('Selecione um Pokémon', pokemon_df['name'], key = 'Rec KNN cluster', help='Selecione um Pokémon que você gosta')
 
     if pokemon_choose:
         selected_pokemon_index = pokemon_df[pokemon_df['name'] == pokemon_choose].index[0]
@@ -273,8 +280,7 @@ with st.expander("Recomendações de Pokémon"):
 st.markdown('<p class="site-subt"><b>Random Forest</b></p>', unsafe_allow_html=True)
 
 with st.expander("Recomendações de Pokémon"):
-    pokemon_choose_rf = st.selectbox('Opte por um Pokémon', pokemon_df['name'],
-                                     help='Selecione um Pokémon que você gosta')
+    pokemon_choose_rf = st.selectbox('Selecione um Pokémon', pokemon_df['name'], key = 'Rec RF', help='Selecione um Pokémon que você gosta')
 
     if pokemon_choose_rf:
         # Fazer previsão com o modelo Random Forest
@@ -299,8 +305,7 @@ with st.expander("Recomendações de Pokémon"):
 st.markdown('<p class="site-subt"><b>DBSCAN</b></p>', unsafe_allow_html=True)
 
 with st.expander("Recomendações de Pokémon"):
-    pokemon_choose_dbscan = st.selectbox('Selete um Pokémon', pokemon_df['name'],
-                                         help='Selecione um Pokémon que você gosta')
+    pokemon_choose_dbscan = st.selectbox('Selecione um Pokémon', pokemon_df['name'], key = 'Rec DBSCAN', help='Selecione um Pokémon que você gosta')
 
     if pokemon_choose_dbscan:
         selected_pokemon_index_dbscan = pokemon_df[pokemon_df['name'] == pokemon_choose_dbscan].index[0]
@@ -320,5 +325,25 @@ with st.expander("Recomendações de Pokémon"):
                 st.header(f"{i + 1}º")
                 st.image(pokemon_df.iloc[similar_pokemon_indices[i]]['image'],
                          caption=pokemon_df.iloc[similar_pokemon_indices[i]]['name'], width=100)
+
+# Seção para SVD
+st.markdown('<p class="site-subt"><b>SVD</b></p>', unsafe_allow_html=True)
+with st.expander("Recomendações de Pokémon"):
+    pokemon_choose = st.selectbox('Selecione um Pokémon', pokemon_df['name'], key = 'Rec SVD', help='Selecione um Pokémon que você gosta')
+
+    if pokemon_choose:
+        selected_pokemon_index = pokemon_df[pokemon_df['name'] == pokemon_choose].index[0]
+
+        distances, indices = knn_model_svd.kneighbors(componentes_svd[selected_pokemon_index].reshape(1, -1))
+
+        st.subheader("Pokémon semelhantes:")
+        colunas = st.columns(5)
+
+        for i in range(5):
+            with colunas[i]:
+                st.header(f"{i + 1}º")
+                st.image(pokemon_df.loc[indices[0][i + 1], 'image'],
+                         caption=pokemon_df.loc[indices[0][i + 1], 'name'],
+                         width=100)
 
 st.markdown('<hr>', unsafe_allow_html=True)
