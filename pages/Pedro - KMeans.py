@@ -5,6 +5,7 @@ import plotly.express as px
 import streamlit as st
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
+from sklearn.preprocessing import LabelEncoder
 
 current_path = Path(__file__).resolve().parent.parent
 pokemon_csv = str(current_path / "data" / "pokemon.csv")
@@ -32,24 +33,38 @@ k = st.sidebar.slider("Número de Clusters (k)", min_value=2, max_value=50, valu
 
 selected_pokemon = st.sidebar.selectbox("Escolha um Pokémon", data["name"])
 selected_cols = st.sidebar.multiselect("Selecione as colunas para clusterização", data.columns)
+label_encoder = LabelEncoder()
 if selected_cols and selected_pokemon:
+    for sc in selected_cols:
+        data[sc] = label_encoder.fit_transform(data[sc])
+
     pokemon_data = data[data["name"] == selected_pokemon]
     X = data[selected_cols]
-    data_encoded = pd.get_dummies(X,
-                                  columns=selected_cols)
+    st.dataframe(X)
+
     kmeans = KMeans(n_clusters=k, n_init=10)
-    kmeans.fit(data_encoded)
+    kmeans.fit(X)
     data["cluster"] = kmeans.labels_
     fig = px.scatter(data, x=selected_cols[0], y=selected_cols[1], color="cluster", title="K-Means Clustering")
     st.plotly_chart(fig)
 
-    cluster_selected_pokemon = kmeans.predict(data_encoded)
-    data["cluster"] = kmeans.labels_
-    similar_pokemon = data[data["cluster"] == cluster_selected_pokemon[0]]
-    st.write("Pokémon com características semelhantes:")
-    st.write(similar_pokemon)
+    cluster_selected_pokemon = kmeans.predict(X)
 
-    silhouette_avg = silhouette_score(data_encoded, kmeans.labels_)
+    pokemon_name = selected_pokemon
+    pokemon_index = data[data["name"] == pokemon_name].index[0]
+    pokemon_index2 = data[data["name"] == pokemon_name].index[0]
+    pokemon_cluster = cluster_selected_pokemon[pokemon_index]
+    print(f"O Pokémon '{pokemon_name}' pertence ao cluster {pokemon_cluster}")
+    pokemon_in_cluster = data[cluster_selected_pokemon == pokemon_cluster]
+    print(pokemon_in_cluster)
+    # Converter para inteiro
+    # similar_pokemon = data[data["cluster"] == cluster_label]
+    st.write("Pokémon com características semelhantes:")
+    selected_cols.insert(0, "name")
+    selected_cols.insert(1, "pokedex_number")
+    st.write(pokemon_in_cluster[selected_cols])
+
+    silhouette_avg = silhouette_score(X, kmeans.labels_)
     st.write(f"Coeficiente de Silhueta: {silhouette_avg:.2f}")
     st.write("O coeficiente de silhueta varia de -1 a 1, onde:")
     st.write("- Valores próximos de 1 indicam uma clusterização bem definida.")
